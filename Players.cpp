@@ -16,7 +16,7 @@ void Players::start(MQTTClient2 *mqttClient, string playerNumber)
 {
 	// depende de la entrega
 	this->mqttClient = mqttClient;
-	playerId = "robot" + teamID + "." + playerNumber.c_str();
+	this->robotID = "robot" + teamID + "." + playerNumber.c_str();
 }
 
 void Players::setDisplay(string path)
@@ -30,7 +30,7 @@ void Players::setDisplay(string path)
 
 	UnloadImage(selectedImage);
 
-	mqttClient->publish(playerId + "/display/lcd/set", payload);
+	mqttClient->publish(robotID + "/display/lcd/set", payload);
 }
 
 // Funcion para trasnformar un float a vector de char.
@@ -44,49 +44,23 @@ std::vector<char> Players::getArrayFromFloat(float payload)
 	return data;
 }
 
-/*Función de movimiento del robot, a traves de los 4 motores
- *
- * Esta función envia los valores de corriente a cada motor,
- * para obtenerlos se utiliza una transformación lineal
- * sobre la dirección deseada.
- * Ademas utiliza un coeficiente de rotación que permite
- * modificar la matriz de transformación y asi lograr rotar al robot.
- *
- * Normalizando el vector resultante y luego escalandolo
- * por el valor limite permite mantener limitado a los motores
- * y evitar que se quemen
- */
-/*void Players::moveMotors()
+std::vector<char> Players::getArrayFromSetPoint(setPoint_t payload)
 {
-	// Calculo de corriente sobre los motores
-	Vector2 direction((int) IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT),
-							  (int)IsKeyDown(KEY_UP) - IsKeyDown(KEY_DOWN)); //Esto hay que cambiarlo mas adelante
+	std::vector<char> data(sizeof(setPoint_t));
 
-	int rotationCoef = IsKeyDown(KEY_SPACE);
+	// Extraído de: https://www.cplusplus.com/reference/cstring/memcpy/
+	memcpy(data.data(), &payload, sizeof(setPoint_t));
 
-	raylib::Vector4 motor(direction.DotProduct(VECTOR_MOV_1),
-						  direction.DotProduct(VECTOR_MOV_2) * (1 - rotationCoef),
-						  direction.DotProduct(VECTOR_MOV_3),
-						  direction.DotProduct(VECTOR_MOV_4) * (1 + rotationCoef));
+	return data;
+}
 
-	//Creación y Publicación de los mensajes
 
-	MQTTListener msj1, msj2, msj3, msj4;
-	msj1.topic = "robot1/motor1/current/set";
-	msj2.topic = "robot1/motor2/current/set";
-	msj3.topic = "robot1/motor3/current/set";
-	msj4.topic = "robot1/motor4/current/set";
-
-	msj1.payload = getArrayFromFloat(LIMIT_CURRENT * motor.Normalize().x);
-	msj2.payload = getArrayFromFloat(LIMIT_CURRENT * motor.Normalize().y);
-	msj3.payload = getArrayFromFloat(LIMIT_CURRENT * motor.Normalize().z);
-	msj4.payload = getArrayFromFloat(LIMIT_CURRENT * motor.Normalize().w);
-
-	mqttClient->publish(msj1.topic, msj1.payload);
-	mqttClient->publish(msj2.topic, msj2.payload);
-	mqttClient->publish(msj3.topic, msj3.payload);
-	mqttClient->publish(msj4.topic, msj4.payload);
-}*/
+//Funcion para acercarse a la pelota 
+void Players::goToBall (coord_t pointF){
+	setPoint_t destination ={(pointF), 0};
+	//mandar mensaje
+	this->mqttClient->publish("robot" + this->teamID + "." + this->robotID + "/pid/setpoint/set",getArrayFromSetPoint(destination));
+}
 
 // Función para hacer funcionar el Kricker y el Chipper.
 // Estos se activan con la tecla ENTER
@@ -133,9 +107,9 @@ std::vector<char> Players::getArrayFromFloat(float payload)
  *   @param: proportion - proportional position [0 = origin ~~ 1 = final]
  *   @return: coordinate calculated
  */
-coordinate_t Players::proportionalPosition(coordinate_t originPos, coordinate_t finalPos, float proportion)
+coord_t Players::proportionalPosition(coord_t originPos, coord_t finalPos, float proportion)
 {
-	coordinate_t destination;
+	coord_t destination;
 	destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
 	destination.z = (finalPos.z - originPos.z) * proportion + originPos.z;
 	return destination;
@@ -147,7 +121,7 @@ coordinate_t Players::proportionalPosition(coordinate_t originPos, coordinate_t 
  *   @param: finalPos - final position of reference
  *   @return: angle in eulerian degrees
  */
-float Players::calculateRotation(coordinate_t originPos, coordinate_t finalPos)
+float Players::calculateRotation(coord_t originPos, coord_t finalPos)
 {
 	float deltaX = finalPos.x - originPos.x;
 	float deltaZ = finalPos.z - originPos.z;

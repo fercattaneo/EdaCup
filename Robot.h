@@ -1,8 +1,7 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include <raylib.h>
-
+#include "raylib.h"
 #include <string>
 
 using namespace std;
@@ -10,9 +9,14 @@ using namespace std;
 typedef struct
 {
     float x;
-    float y;
     float z;
-} vector3_t;
+} coord_t;
+
+typedef struct
+{
+    coord_t coord;
+    float rotation;
+} setPoint_t;
 
 class Robot
 {
@@ -21,10 +25,10 @@ public:
     string robotID;
 
 protected:
-    vector3_t position;
-    vector3_t speed;
-    vector3_t rotation;
-    vector3_t angularSpeed;
+    Vector3 position;
+    Vector3 speed;
+    Vector3 rotation;
+    Vector3 angularSpeed;
 };
 
 #endif

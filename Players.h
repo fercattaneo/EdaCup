@@ -9,21 +9,8 @@
 #include <vector>
 #include "MQTTClient2.h"
 #include <assert.h>
-//#include "GameModel.h"
 
 using namespace std;
-
-typedef struct
-{
-    float x;
-    float z;
-} coordinate_t;
-
-typedef struct
-{
-    coordinate_t coord;
-    float rotation;
-} setPoint_t;
 
 // Rol of each player
 enum PLAYERS_POSITION
@@ -45,9 +32,11 @@ public:
     void setKickerChipper();
     void moveMotors();
     vector<char> getArrayFromFloat(float payload);
+    std::vector<char> getArrayFromSetPoint(setPoint_t payload);
     float getFloat(std::vector<char> vec);
-    coordinate_t proportionalPosition(coordinate_t originPos, coordinate_t finalPos, float proportion);
-    float calculateRotation(coordinate_t originPos, coordinate_t finalPos);
+    coord_t proportionalPosition(coord_t originPos, coord_t finalPos, float proportion);
+    float calculateRotation(coord_t originPos, coord_t finalPos);
+    void goToBall (coord_t pointF);
 
     PLAYERS_POSITION fieldRol;
     void toEnablePlayer(void);
@@ -57,8 +46,6 @@ private:
     MQTTClient2 *mqttClient;
     bool enablePlayer;
 
-    string teamID;
-    string playerId; // robot
     Image displayImage;
 
     void setDisplay(string path);

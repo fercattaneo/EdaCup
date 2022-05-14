@@ -3,7 +3,7 @@
 
 #include "MQTTClient2.h"
 #include <vector>
-#include "Robot.h"
+// #include "Robot.h"
 #include "Players.h"
 
 using namespace std;
@@ -11,7 +11,7 @@ using namespace std;
 #define LENGTH_OF_COURT_X 9f // meters
 #define LENGTH_OF_COURT_Z 6f
 
-#define CENTER_OF_COURT_X 1f // physical coordinates
+#define CENTER_OF_COURT_X 1.0f // physical coordinates
 #define CENTER_OF_COURT_Z 0.85f
 
 enum GameState
@@ -38,11 +38,13 @@ typedef struct
     vector<float> payload;
 } Message;
 
-class GameModel
+class GameModel : public MQTTListener
 {
 public:
-    GameModel(MQTTClient2 &mqttClient);
+    GameModel(MQTTClient2 &mqttClient, char myTeam);
     ~GameModel();
+
+    void onMessage(string topic, vector<char> payload);
 
     void start(string teamID);
     void suscribeToGameTopics();
@@ -63,6 +65,9 @@ private:
 
     string teamID;
     float deltaTime;
+
+    coord_t arcoTeam;
+    coord_t arcoOpposite;
 };
 
 #endif //_GAMEMODEL_H

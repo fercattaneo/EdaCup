@@ -1,8 +1,7 @@
 #include "MQTTClient2.h"
 #include "Players.h"
 #include "GameModel.h"
-#include "MQTTListenChild.h"
-#include "Robot.h"
+// #include "Robot.h"
 
 #include "Players.h"
 #include <iostream>
@@ -15,7 +14,7 @@ void subscribeRobotTopics(MQTTClient2 &client, char team);
 int main(int argc, char *argv[])
 {
     string IMAGES_PATH = "../Resources/";
-    if (argc < 2)
+    /*if (argc < 2)
     {
         cout << "ERROR: invalid paramenters -> [program] [team number]" << endl;
         return 1;
@@ -24,7 +23,7 @@ int main(int argc, char *argv[])
     {
         cout << "ERROR: invalid team number, must be 1 or 2" << endl;
         return 1;
-    }
+    }*/
 
     MQTTClient2 client;
     if (!client.connect("controller", "localhost", 1883, "user", "vdivEMMN3SQWX2Ez"))
@@ -33,90 +32,22 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    char myTeam = *argv[1] - '0';
-    GameModel gameModel(client);
+    //char myTeam = *argv[1];
+    char myTeam = '1';
+    GameModel gameModel(client, myTeam);
 
+    //
     Players player1(IMAGES_PATH + "bola1_16x16.png");
     gameModel.addPlayer(&player1);
 
     gameModel.suscribeToGameTopics();
     subscribeRobotTopics(client, myTeam);
 
-    MQTTListenChild listener;
-    client.setListener(&listener);
+    client.setListener(&gameModel);
+
+    cout << "Game STARTING..." << endl;
     client.run();
     cout << "Game MQTT subscription ended..." << endl;
-    cout << "Game STARTING..." << endl;
-
-    bool enableLoop = true;
-    while (enableLoop) // game transition
-    {
-        float deltaTime = GetFrameTime();
-        gameModel.updateTime(deltaTime);
-
-        switch (gameModel.gameState)
-        {
-        case START:
-
-            break;
-
-        case PRE_KICKOFF:
-
-            break;
-
-        case KICKOFF:
-
-            break;
-
-        case IN_GAME:
-
-            break;
-
-        case PRE_FREEKICK:
-
-            break;
-
-        case FREEKICK:
-
-            break;
-
-        case PRE_PENALTY:
-
-            break;
-
-        case PENALTY:
-
-            break;
-
-        case PAUSE:
-
-            break;
-
-        case CONTINUE:
-
-            break;
-
-        case REMOVE_ROBOT:
-
-            break;
-
-        case ADD_ROBOT:
-
-            break;
-
-        case GOAL:
-
-            break;
-
-        case ENDED_GAME:
-            enableLoop = false;
-            break;
-
-        default:
-            break;
-        }
-    }
-
     cout << "Game ended successfully." << endl;
     return 0;
 }

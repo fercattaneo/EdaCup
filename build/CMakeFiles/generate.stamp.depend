@@ -21,11 +21,11 @@ C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/Commo
 C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.22/Modules/Platform/Windows.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.22/Modules/Platform/WindowsPaths.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.22/Modules/SelectLibraryConfigurations.cmake
-C:/Users/catta/Documents/EDA/EdaCup-1/CMakeLists.txt
-C:/Users/catta/Documents/EDA/EdaCup-1/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeCCompiler.cmake
-C:/Users/catta/Documents/EDA/EdaCup-1/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeCXXCompiler.cmake
-C:/Users/catta/Documents/EDA/EdaCup-1/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeRCCompiler.cmake
-C:/Users/catta/Documents/EDA/EdaCup-1/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeSystem.cmake
+C:/Users/catta/Documents/EDA/EdaCup/CMakeLists.txt
+C:/Users/catta/Documents/EDA/EdaCup/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeCCompiler.cmake
+C:/Users/catta/Documents/EDA/EdaCup/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeCXXCompiler.cmake
+C:/Users/catta/Documents/EDA/EdaCup/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeRCCompiler.cmake
+C:/Users/catta/Documents/EDA/EdaCup/build/CMakeFiles/3.22.22022201-MSVC_2/CMakeSystem.cmake
 C:/dev/vcpkg/installed/x64-windows/share/mosquitto/vcpkg-cmake-wrapper.cmake
 C:/dev/vcpkg/installed/x64-windows/share/openssl/vcpkg-cmake-wrapper.cmake
 C:/dev/vcpkg/installed/x64-windows/share/raylib/vcpkg-cmake-wrapper.cmake

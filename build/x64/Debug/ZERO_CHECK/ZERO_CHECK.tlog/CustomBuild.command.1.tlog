@@ -1,6 +1,6 @@
-^C:\USERS\CATTA\DOCUMENTS\EDA\EDACUP-1\BUILD\CMAKEFILES\F35650C8E09AB3094F68D76195A6807C\GENERATE.STAMP.RULE
+^C:\USERS\CATTA\DOCUMENTS\EDA\EDACUP\BUILD\CMAKEFILES\5216F3E1864139347FA64F5652E1B334\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/catta/Documents/EDA/EdaCup-1 -BC:/Users/catta/Documents/EDA/EdaCup-1/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/catta/Documents/EDA/EdaCup-1/build/EDACUP.sln
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/catta/Documents/EDA/EdaCup -BC:/Users/catta/Documents/EDA/EdaCup/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/catta/Documents/EDA/EdaCup/build/EDACUP.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
