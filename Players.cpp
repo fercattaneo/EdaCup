@@ -4,33 +4,33 @@ using namespace std;
 
 Players::Players(string path)
 {
-    displayImage = LoadImage(path.c_str());
+	displayImage = LoadImage(path.c_str());
 }
 
 Players::~Players()
 {
-    UnloadImage(displayImage);
+	UnloadImage(displayImage);
 }
 
 void Players::start(MQTTClient2 *mqttClient, string playerNumber)
 {
-    //depende de la entrega
-    this->mqttClient = mqttClient;
-    playerId = "robot" + teamID + "." + playerNumber.c_str();
+	// depende de la entrega
+	this->mqttClient = mqttClient;
+	playerId = "robot" + teamID + "." + playerNumber.c_str();
 }
 
 void Players::setDisplay(string path)
 {
-    Rectangle selectRectangle = {0, 0, 16, 16};
-    Image selectedImage = ImageFromImage(displayImage, selectRectangle);
+	Rectangle selectRectangle = {0, 0, 16, 16};
+	Image selectedImage = ImageFromImage(displayImage, selectRectangle);
 
-    const int dataSize = 16 * 16 * 3;
-    vector<char> payload(dataSize);
-    memcpy(payload.data(), selectedImage.data, dataSize);
+	const int dataSize = 16 * 16 * 3;
+	vector<char> payload(dataSize);
+	memcpy(payload.data(), selectedImage.data, dataSize);
 
-    UnloadImage(selectedImage);
+	UnloadImage(selectedImage);
 
-    mqttClient->publish(playerId + "/display/lcd/set", payload);
+	mqttClient->publish(playerId + "/display/lcd/set", payload);
 }
 
 // Funcion para trasnformar un float a vector de char.
@@ -126,54 +126,51 @@ std::vector<char> Players::getArrayFromFloat(float payload)
 	}
 }*/
 
-
 /*
-*	@brief: calculates the coordinate in reference from other 2 and a proportional value
-*   @param: originPos - origin position of object
-*   @param: finalPos - final position of reference
-*   @param: proportion - proportional position [0 = origin ~~ 1 = final]
-*   @return: coordinate calculated
-*/
-coordinate_t Players::proportionalPosition (coordinate_t originPos, coordinate_t finalPos, float proportion)
+ *	@brief: calculates the coordinate in reference from other 2 and a proportional value
+ *   @param: originPos - origin position of object
+ *   @param: finalPos - final position of reference
+ *   @param: proportion - proportional position [0 = origin ~~ 1 = final]
+ *   @return: coordinate calculated
+ */
+coordinate_t Players::proportionalPosition(coordinate_t originPos, coordinate_t finalPos, float proportion)
 {
-    coordinate_t destination;
-    destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
-    destination.z = (finalPos.z - originPos.z) * proportion + originPos.z;
-    return destination;
+	coordinate_t destination;
+	destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
+	destination.z = (finalPos.z - originPos.z) * proportion + originPos.z;
+	return destination;
 }
 
-
-
 /*
-*	@brief: calculates the rotation between 2 coordinates
-*   @param: originPos - origin position of object
-*   @param: finalPos - final position of reference
-*   @return: angle in eulerian degrees
-*/
-float Players::calculateRotation (coordinate_t originPos, coordinate_t finalPos)
+ *	@brief: calculates the rotation between 2 coordinates
+ *   @param: originPos - origin position of object
+ *   @param: finalPos - final position of reference
+ *   @return: angle in eulerian degrees
+ */
+float Players::calculateRotation(coordinate_t originPos, coordinate_t finalPos)
 {
-    float deltaX = finalPos.x - originPos.x;
-    float deltaZ = finalPos.z - originPos.z;
+	float deltaX = finalPos.x - originPos.x;
+	float deltaZ = finalPos.z - originPos.z;
 
-    if(deltaX == 0 && deltaZ == 0)
-    {
-        cout << "Same Position delivered" << endl;
-        return 0;
-    }
-    if(deltaZ == 0)
-    {
-        cout << "Invalid Angle, aprox to 90°" << endl;
-        return 90;
-    }
-    if(deltaX == 0)
-    {
-        cout << "Invalid Angle, aprox to 0°" << endl;
-        return 0;
-    }
+	if (deltaX == 0 && deltaZ == 0)
+	{
+		cout << "Same Position delivered" << endl;
+		return 0;
+	}
+	if (deltaZ == 0)
+	{
+		cout << "Invalid Angle, aprox to 90°" << endl;
+		return 90;
+	}
+	if (deltaX == 0)
+	{
+		cout << "Invalid Angle, aprox to 0°" << endl;
+		return 0;
+	}
 
-    float angle = 1/(std::tan(deltaX/deltaZ));  // angulo en radianes
-    angle = angle * (180 / PI);                 // conversion a grados sexagecimales
-    return angle;
+	float angle = 1 / (std::tan(deltaX / deltaZ)); // angulo en radianes
+	angle = angle * (180 / PI);					   // conversion a grados sexagecimales
+	return angle;
 
 	// creo que para los robots el angulo va a tener q ser el q recibe pero negativo
 	// correccion: angulo - 90, no negativo xq es en referencia al eje z
@@ -192,7 +189,7 @@ float Players::getFloat(std::vector<char> vec)
 	return value;
 }
 
-void Players::enablePlayer(void)
+void Players::toEnablePlayer(void)
 {
 	this->enablePlayer = true;
 }

@@ -28,7 +28,10 @@ typedef struct
 // Rol of each player
 enum PLAYERS_POSITION
 {
-    GOALIE, DEFENSE, MIDFIELDER, SHOOTER
+    GOALIE,
+    DEFENSE,
+    MIDFIELDER,
+    SHOOTER
 };
 
 class Players : public Robot
@@ -43,11 +46,11 @@ public:
     void moveMotors();
     vector<char> getArrayFromFloat(float payload);
     float getFloat(std::vector<char> vec);
-    coordinate_t proportionalPosition (coordinate_t originPos, coordinate_t finalPos, float proportion);
-    float calculateRotation (coordinate_t originPos, coordinate_t finalPos);
+    coordinate_t proportionalPosition(coordinate_t originPos, coordinate_t finalPos, float proportion);
+    float calculateRotation(coordinate_t originPos, coordinate_t finalPos);
 
     PLAYERS_POSITION fieldRol;
-    void enablePlayer(void);
+    void toEnablePlayer(void);
     void dissablePlayer(void);
 
 private:
@@ -55,7 +58,7 @@ private:
     bool enablePlayer;
 
     string teamID;
-    string playerId; //robot
+    string playerId; // robot
     Image displayImage;
 
     void setDisplay(string path);

@@ -21,19 +21,18 @@
 using namespace std;
 
 /**
-* @brief ...
-*
-*/
+ * @brief ...
+ *
+ */
 class MQTTListener
 {
 public:
     virtual void onMessage(string topic, vector<char> payload) = 0;
 };
 
-
 /**
  * @brief Manages an MQTT client connection.
- * 
+ *
  */
 class MQTTClient2
 {

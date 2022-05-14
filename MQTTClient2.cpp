@@ -5,14 +5,13 @@
  * @version 2.0
  *
  * @copyright Copyright (c) 2022
- * 
+ *
  * @cite libmosquitto documentation: https://mosquitto.org/api/files/mosquitto-h.html
  *
  */
 
 #include <cstring>
 #include <iostream>
-
 
 static void onMQTTMessage(struct mosquitto *mosquittoClient,
                           void *context,
@@ -223,7 +222,7 @@ bool MQTTClient2::unsubscribe(string topic)
 
 /**
  * @brief Sets the MQTT message listener.
- * 
+ *
  * @param listener The MQTT message listener
  */
 void MQTTClient2::setListener(MQTTListener *listener)

@@ -14,4 +14,4 @@ public:
     void onMessage(string topic, vector<char> payload);
 };
 
-#endif   //_MQTTLISTENCHILD_H un experto programador en C, puede tener problemas en la logica. Un experto programador en c++ puede tener problemas entendiendo c++
+#endif //_MQTTLISTENCHILD_H un experto programador en C, puede tener problemas en la logica. Un experto programador en c++ puede tener problemas entendiendo c++

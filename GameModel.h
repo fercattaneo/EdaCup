@@ -8,16 +8,28 @@
 
 using namespace std;
 
-#define LENGTH_OF_COURT_X 9f  //meters
+#define LENGTH_OF_COURT_X 9f // meters
 #define LENGTH_OF_COURT_Z 6f
 
-#define CENTER_OF_COURT_X 1f  //physical coordinates
+#define CENTER_OF_COURT_X 1f // physical coordinates
 #define CENTER_OF_COURT_Z 0.85f
 
 enum GameState
 {
-    START, PRE_KICKOFF, KICKOFF, IN_GAME, PRE_FREEKICK, FREEKICK, PRE_PENALTY, PENALTY, 
-    PAUSE, CONTINUE, REMOVE_ROBOT, ADD_ROBOT, ENDED_GAME, GOAL
+    START,
+    PRE_KICKOFF,
+    KICKOFF,
+    IN_GAME,
+    PRE_FREEKICK,
+    FREEKICK,
+    PRE_PENALTY,
+    PENALTY,
+    PAUSE,
+    CONTINUE,
+    REMOVE_ROBOT,
+    ADD_ROBOT,
+    ENDED_GAME,
+    GOAL
 };
 
 typedef struct
@@ -37,12 +49,12 @@ public:
     void addPlayer(Players *bot);
     void removePlayer(Players *bot);
 
-    //Funcion para enviar los mensajes
-    void sendMessage (vector<Message> Menssages);
-    
+    // Funcion para enviar los mensajes
+    void sendMessage(vector<Message> Menssages);
+
     string getTeamID();
 
-    GameState gameState; 
+    GameState gameState;
     void updateTime(float deltaTime);
 
 private:
@@ -51,7 +63,6 @@ private:
 
     string teamID;
     float deltaTime;
-
 };
 
 #endif //_GAMEMODEL_H
