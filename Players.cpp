@@ -2,76 +2,22 @@
 
 using namespace std;
 
-Players::Players(string path)
+Players::Players()
 {
-	displayImage = LoadImage(path.c_str());
+	
 }
 
 Players::~Players()
 {
-	UnloadImage(displayImage);
+	// UnloadImage(displayImage);
 }
 
-void Players::start(MQTTClient2 *mqttClient, string playerNumber)
+void Players::start(string playerNumber)
 {
 	// depende de la entrega
-	this->mqttClient = mqttClient;
-	this->robotID = "robot" + teamID + "." + playerNumber.c_str();
+	robotID = "robot" + teamID + "." + playerNumber.c_str();
 }
 
-void Players::setDisplay(string path)
-{
-	Rectangle selectRectangle = {0, 0, 16, 16};
-	Image selectedImage = ImageFromImage(displayImage, selectRectangle);
-
-	const int dataSize = 16 * 16 * 3;
-	vector<char> payload(dataSize);
-	memcpy(payload.data(), selectedImage.data, dataSize);
-
-	UnloadImage(selectedImage);
-
-	mqttClient->publish(robotID + "/display/lcd/set", payload);
-	//MQTTMessage setDisplayMessage = {robotID + "/display/lcd/set", payload};
-	//this->messagesToSend.push_back(setDisplayMessage);
-}
-
-// Funcion para trasnformar un float a vector de char.
-std::vector<char> Players::getArrayFromFloat(float payload)
-{
-	std::vector<char> data(sizeof(float));
-
-	// Extraído de: https://www.cplusplus.com/reference/cstring/memcpy/
-	memcpy(data.data(), &payload, sizeof(float));
-
-	return data;
-}
-
-std::vector<char> Players::getArrayFromSetPoint(setPoint_t setpoint)
-{
-
-	vector<char> payload(12);
-
-	*((float*)&payload[0]) = setpoint.coord.x;
-	*((float*)&payload[4]) = setpoint.coord.y;
-	*((float*)&payload[8]) = setpoint.rotation;
-
-	return payload;
-/*	std::vector<char> data(sizeof(setPoint_t));
-
-	// Extraído de: https://www.cplusplus.com/reference/cstring/memcpy/
-	memcpy(data.data(), &payload, sizeof(setPoint_t));
-
-	return data;*/
-
-}
-
-
-//Funcion para acercarse a la pelota 
-setPoint_t Players::goToBall (Vector2 pointF){
-	setPoint_t destination ={(pointF), 0};
-	//falta calculo de rotacion
-	return destination;
-}
 
 // Función para hacer funcionar el Kricker y el Chipper.
 // Estos se activan con la tecla ENTER
@@ -92,6 +38,14 @@ setPoint_t Players::goToBall (Vector2 pointF){
 	}
 }*/
 
+setPoint_t Players::goToBall (Vector2 oppositeGoal, Vector2 ballPosition){
+	setPoint_t destination;
+	destination.coord = proportionalPosition(oppositeGoal,ballPosition,1.1f);
+	float rotation = calculateRotation(oppositeGoal,ballPosition);
+	//falta calculo de rotacion
+	return destination;
+}
+
 // Función para encender el Dribbler. Se enciende con la tecla
 // Blockspace y se apaga con la tecla M
 /*void Players::setDribbler()
@@ -110,69 +64,6 @@ setPoint_t Players::goToBall (Vector2 pointF){
 		publish(msj1.topic, msj1.payload);
 	}
 }*/
-
-/*
- *	@brief: calculates the coordinate in reference from other 2 and a proportional value
- *   @param: originPos - origin position of object
- *   @param: finalPos - final position of reference
- *   @param: proportion - proportional position [0 = origin ~~ 1 = final]
- *   @return: coordinate calculated
- */
-Vector2 Players::proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion)
-{
-	Vector2 destination;
-	destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
-	destination.y = (finalPos.y - originPos.y) * proportion + originPos.y;
-	return destination;
-}
-
-/*
- *	@brief: calculates the rotation between 2 coordinates
- *   @param: originPos - origin position of object
- *   @param: finalPos - final position of reference
- *   @return: angle in eulerian degrees
- */
-float Players::calculateRotation(Vector2 originPos, Vector2 finalPos)
-{
-	float deltaX = finalPos.x - originPos.x;
-	float deltaZ = finalPos.y - originPos.y;
-
-	if (deltaX == 0 && deltaZ == 0)
-	{
-		cout << "Same Position delivered" << endl;
-		return 0;
-	}
-	if (deltaZ == 0)
-	{
-		cout << "Invalid Angle, aprox to 90°" << endl;
-		return 90;
-	}
-	if (deltaX == 0)
-	{
-		cout << "Invalid Angle, aprox to 0°" << endl;
-		return 0;
-	}
-
-	float angle = 1 / (std::tan(deltaX / deltaZ)); // angulo en radianes
-	angle = angle * (180 / PI);					   // conversion a grados sexagecimales
-	return angle;
-
-	// creo que para los robots el angulo va a tener q ser el q recibe pero negativo
-	// correccion: angulo - 90, no negativo xq es en referencia al eje z
-	// ver bien despues in-game
-}
-
-// Funcion para convertir un vector de char a un float
-float Players::getFloat(std::vector<char> vec)
-{
-	float value = 0.0;
-
-	// Extraído de: https://www.cplusplus.com/reference/cassert/assert/
-	assert(vec.size() == sizeof(value));
-
-	memcpy(&value, &vec[0], std::min(vec.size(), sizeof(float)));
-	return value;
-}
 
 void Players::toEnablePlayer(void)
 {

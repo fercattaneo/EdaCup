@@ -6,14 +6,12 @@
 #include <array>
 // #include "Robot.h"
 #include "Players.h"
+#include "data.h"
 
 using namespace std;
 
 #define LENGTH_OF_COURT_X 9f // meters
 #define LENGTH_OF_COURT_Z 6f
-
-#define CENTER_OF_COURT_X 1.0f // physical coordinates
-#define CENTER_OF_COURT_Z 0.85f
 
 #define EARTH__GRAVITY 9.80665f
 
@@ -51,19 +49,23 @@ public:
 
     void start(string teamID);
     void suscribeToGameTopics();
+    void setDisplay(string path, string robotID);
     void addPlayer(Players *bot);
     void removePlayer(Players *bot);
 
     coord_t getProxPosBall2D (Vector3 ballPosition, Vector3 ballVelocity);
-
+    
+    void testMovement(); //DESPUES HAY Q SACARLA
     string getTeamID();
 
     GameState gameState;
     void updateTime(float deltaTime);
+    void updatePositions();
 
     vector<MQTTMessage> messagesReceived;
     vector<MQTTMessage> messagesToSend;
 
+    
 private:
     string teamID;
 
@@ -78,7 +80,6 @@ private:
     Vector2 arcoTeam;
     Vector2 arcoOpposite;
 
-    void updatePositions();
     
     void startHeatMap();
     void updateHeatMap();

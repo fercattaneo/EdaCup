@@ -1,7 +1,6 @@
 #include "MQTTClient2.h"
 #include "Players.h"
 #include "GameModel.h"
-// #include "Robot.h"
 
 #include "Players.h"
 #include <iostream>
@@ -13,7 +12,7 @@ void subscribeRobotTopics(MQTTClient2 &client, char team);
 
 int main(int argc, char *argv[])
 {
-    string IMAGES_PATH = "../Resources/";
+    string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/"; // /../../Resources
     /*if (argc < 2)
     {
         cout << "ERROR: invalid paramenters -> [program] [team number]" << endl;
@@ -37,8 +36,16 @@ int main(int argc, char *argv[])
     GameModel gameModel(client, myTeam);
 
     //
-    Players player1(IMAGES_PATH + "bola1_16x16.png");
+    Players player1;
     gameModel.addPlayer(&player1);
+    
+    string myTeamStr(1, myTeam);
+    gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeamStr + ".1");
+    gameModel.setDisplay(IMAGES_PATH + "Robot2.png", "robot" + myTeamStr + ".2");
+    gameModel.setDisplay(IMAGES_PATH + "Robot3.png", "robot" + myTeamStr + ".3");
+    gameModel.setDisplay(IMAGES_PATH + "Robot4.png", "robot" + myTeamStr + ".4");
+    gameModel.setDisplay(IMAGES_PATH + "Robot8.png", "robot" + myTeamStr + ".5");
+    gameModel.setDisplay(IMAGES_PATH + "Robot10.png", "robot" + myTeamStr + ".6");
 
     gameModel.suscribeToGameTopics();
     subscribeRobotTopics(client, myTeam);
@@ -46,16 +53,21 @@ int main(int argc, char *argv[])
     client.setListener(&gameModel);
 
     cout << "Game STARTING..." << endl;
+    
+///////////////////////////////////
+    gameModel.testMovement();
+///////////////////////////////////
+    
     client.run();
     cout << "Game MQTT subscription ended..." << endl;
     cout << "Game ended successfully." << endl;
     return 0;
 }
 
-void subscribeRobotTopics(MQTTClient2 &client, char team)
+void subscribeRobotTopics(MQTTClient2 &client, string team)
 {
     string myTeam, oppositeTeam;
-    if (team == '1')
+    if (team == "1")
     {
         myTeam = "1";
         oppositeTeam = "2";

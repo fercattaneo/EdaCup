@@ -2,13 +2,30 @@
 #include <iostream>
 #include <cmath>
 #include <cstring>
+#include "data.h"
 
+/////////////////          DESPUES VA A HABER Q BORRAR ESTA FUNCION
+void GameModel::testMovement()
+{
+    setPoint_t destination = team[0]->goToBall(arcoOpposite,{ball[0],ball[2]});
+    MQTTMessage setpointMessage = 
+        {"robot" + team[0]->teamID + "." + team[0]->robotID + "/pid/setpoint/set",
+            getArrayFromSetPoint(destination)};
+    mqttClient->publish(setpointMessage.topic, setpointMessage.payload);
+    cout << "ESTO DEBERIA MOVER A UN ROBOT" << endl;
+}
+//////////////////
+
+/**
+* @brief
+*
+*/
 GameModel::GameModel(MQTTClient2 &mqttClient, char myTeam)
 {
     this->mqttClient = &mqttClient;
     this->teamID = to_string(myTeam);
-    Vector2 arco1 = {(CENTER_OF_COURT_X) + 0.45, (CENTER_OF_COURT_Z)}; //verificar coordenadas
-    Vector2 arco2 = {(CENTER_OF_COURT_X) - 0.45, (CENTER_OF_COURT_Z)};
+    Vector2 arco1 = {0.45, 0.0}; //verificar coordenadas
+    Vector2 arco2 = {-0.45, 0.0};
     this->arcoTeam = (myTeam == '1') ? arco1 : arco2;
     this->arcoOpposite = (myTeam == '1') ? arco2 : arco1;
 };
@@ -18,7 +35,10 @@ GameModel::~GameModel(){
 
 };
 
-
+/**
+* @brief
+*
+*/
 void GameModel::onMessage(string topic, vector<char> payload)
 {
     // cout << topic << endl;
@@ -36,26 +56,32 @@ void GameModel::onMessage(string topic, vector<char> payload)
     messagesReceived.push_back(incomingMessage); //#######
     if(!topic.compare("ball/motion/state")) 
     {
-    //procesamiento ("analizamos topic", luego transformamos a datos utiles, calculos, mandarlo a messagesToSend)
-        while (!this->messagesToSend.empty())   //sends all messages appended to message vector
+        //procesamiento ("analizamos topic", luego transformamos a datos utiles, calculos, mandarlo a messagesToSend)
+        while (!messagesToSend.empty())   //sends all messages appended to message vector
         {
-            MQTTMessage actualMessage = this->messagesToSend.back();
-            this->mqttClient->publish(actualMessage.topic, actualMessage.payload);
-            this->messagesToSend.pop_back();
+            MQTTMessage actualMessage = messagesToSend.back();
+            mqttClient->publish(actualMessage.topic, actualMessage.payload);
+            messagesToSend.pop_back();
         }
     }
+    //LLAMO A FUNCION DE CLASIFICAR TOPICS
 }
 
+/**
+* @brief
+*
+*/
 void GameModel::start(string teamID)
 {
     for (int playerNumber = 1; playerNumber <= team.size(); playerNumber++)
     {
-        team[playerNumber]->start(mqttClient, to_string(playerNumber));
+        team[playerNumber]->start(to_string(playerNumber));
     }
 
     this->teamID = teamID;
     startHeatMap();
 }
+
 /**
  * @brief anade un bot al equipo
  *
@@ -69,6 +95,7 @@ void GameModel::addPlayer(Players *bot)
 /**
  * @brief se suscribe a todos los topicos de la simulacion
  */
+
 void GameModel::suscribeToGameTopics()
 {
     mqttClient->subscribe("ball/motion/state"); 
@@ -93,7 +120,6 @@ void GameModel::updateTime(float deltaTime)
 {
     this->deltaTime = deltaTime;
 }
-
 
 coord_t GameModel::getProxPosBall2D (Vector3 ballPosition, Vector3 ballVelocity)
 {
@@ -127,14 +153,13 @@ void GameModel::updatePositions(void)
 {
     for(auto teamRobot : team)
     {
-        setPoint_t destination = teamRobot->goToBall({ball[0],ball[2]});
+        setPoint_t destination = teamRobot->goToBall(arcoOpposite,{ball[0],ball[2]});
         MQTTMessage setpointMessage = 
             {"robot" + teamRobot->teamID + "." + teamRobot->robotID + "/pid/setpoint/set",
-                teamRobot->getArrayFromSetPoint(destination)};
-        this->messagesToSend.push_back(setpointMessage);
+                getArrayFromSetPoint(destination)};
+        messagesToSend.push_back(setpointMessage);
     }
 }
-
 
 /**
  * @brief empieza el heatmaps con 0s
@@ -152,4 +177,19 @@ void GameModel::startHeatMap()
 void GameModel::updateHeatMap()
 {
        
+}
+
+void GameModel::setDisplay(string path, string robotID)
+{
+    Image displayImage = LoadImage(path.c_str());
+
+	const int dataSize = 16 * 16 * 3;
+	vector<char> payload(dataSize);
+	memcpy(payload.data(), displayImage.data, dataSize);
+
+	// mqttClient->publish(robotID + "/display/lcd/set", payload);
+	MQTTMessage setDisplayMessage = {robotID + "/display/lcd/set", payload};
+	messagesToSend.push_back(setDisplayMessage);
+
+    UnloadImage(displayImage);
 }
