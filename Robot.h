@@ -14,7 +14,7 @@ typedef struct
 
 typedef struct
 {
-    coord_t coord;
+    Vector2 coord;
     float rotation;
 } setPoint_t;
 

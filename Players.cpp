@@ -31,6 +31,8 @@ void Players::setDisplay(string path)
 	UnloadImage(selectedImage);
 
 	mqttClient->publish(robotID + "/display/lcd/set", payload);
+	//MQTTMessage setDisplayMessage = {robotID + "/display/lcd/set", payload};
+	//this->messagesToSend.push_back(setDisplayMessage);
 }
 
 // Funcion para trasnformar un float a vector de char.
@@ -44,22 +46,31 @@ std::vector<char> Players::getArrayFromFloat(float payload)
 	return data;
 }
 
-std::vector<char> Players::getArrayFromSetPoint(setPoint_t payload)
+std::vector<char> Players::getArrayFromSetPoint(setPoint_t setpoint)
 {
-	std::vector<char> data(sizeof(setPoint_t));
+
+	vector<char> payload(12);
+
+	*((float*)&payload[0]) = setpoint.coord.x;
+	*((float*)&payload[4]) = setpoint.coord.y;
+	*((float*)&payload[8]) = setpoint.rotation;
+
+	return payload;
+/*	std::vector<char> data(sizeof(setPoint_t));
 
 	// Extraído de: https://www.cplusplus.com/reference/cstring/memcpy/
 	memcpy(data.data(), &payload, sizeof(setPoint_t));
 
-	return data;
+	return data;*/
+
 }
 
 
 //Funcion para acercarse a la pelota 
-void Players::goToBall (coord_t pointF){
+setPoint_t Players::goToBall (Vector2 pointF){
 	setPoint_t destination ={(pointF), 0};
-	//mandar mensaje
-	this->mqttClient->publish("robot" + this->teamID + "." + this->robotID + "/pid/setpoint/set",getArrayFromSetPoint(destination));
+	//falta calculo de rotacion
+	return destination;
 }
 
 // Función para hacer funcionar el Kricker y el Chipper.
@@ -107,11 +118,11 @@ void Players::goToBall (coord_t pointF){
  *   @param: proportion - proportional position [0 = origin ~~ 1 = final]
  *   @return: coordinate calculated
  */
-coord_t Players::proportionalPosition(coord_t originPos, coord_t finalPos, float proportion)
+Vector2 Players::proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion)
 {
-	coord_t destination;
+	Vector2 destination;
 	destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
-	destination.z = (finalPos.z - originPos.z) * proportion + originPos.z;
+	destination.y = (finalPos.y - originPos.y) * proportion + originPos.y;
 	return destination;
 }
 
@@ -121,10 +132,10 @@ coord_t Players::proportionalPosition(coord_t originPos, coord_t finalPos, float
  *   @param: finalPos - final position of reference
  *   @return: angle in eulerian degrees
  */
-float Players::calculateRotation(coord_t originPos, coord_t finalPos)
+float Players::calculateRotation(Vector2 originPos, Vector2 finalPos)
 {
 	float deltaX = finalPos.x - originPos.x;
-	float deltaZ = finalPos.z - originPos.z;
+	float deltaZ = finalPos.y - originPos.y;
 
 	if (deltaX == 0 && deltaZ == 0)
 	{

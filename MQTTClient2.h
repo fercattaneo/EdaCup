@@ -20,6 +20,12 @@
 
 using namespace std;
 
+typedef struct
+{
+    string topic;
+    vector<char> payload;
+} MQTTMessage;
+
 /**
  * @brief ...
  *

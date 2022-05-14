@@ -3,6 +3,7 @@
 
 #include "MQTTClient2.h"
 #include <vector>
+#include <array>
 // #include "Robot.h"
 #include "Players.h"
 
@@ -13,6 +14,8 @@ using namespace std;
 
 #define CENTER_OF_COURT_X 1.0f // physical coordinates
 #define CENTER_OF_COURT_Z 0.85f
+
+#define EARTH__GRAVITY 9.80665f
 
 enum GameState
 {
@@ -34,9 +37,9 @@ enum GameState
 
 typedef struct
 {
-    string topic;
-    vector<float> payload;
-} Message;
+    unsigned char value : 6;  //ya vemos
+    unsigned char type : 2;  //00 = nada, 01 = bot aliado, 10 = bola, 11 = enemigo
+}tile_t;
 
 class GameModel : public MQTTListener
 {
@@ -51,23 +54,34 @@ public:
     void addPlayer(Players *bot);
     void removePlayer(Players *bot);
 
-    // Funcion para enviar los mensajes
-    void sendMessage(vector<Message> Menssages);
+    coord_t getProxPosBall2D (Vector3 ballPosition, Vector3 ballVelocity);
 
     string getTeamID();
 
     GameState gameState;
     void updateTime(float deltaTime);
 
-private:
-    MQTTClient2 *mqttClient;
-    vector<Players *> team;
+    vector<MQTTMessage> messagesReceived;
+    vector<MQTTMessage> messagesToSend;
 
+private:
     string teamID;
+
+    MQTTClient2 *mqttClient;
     float deltaTime;
 
-    coord_t arcoTeam;
-    coord_t arcoOpposite;
+    vector<Players *> team;
+    float ball[12];
+
+    array<tile_t, 540000> heatMap;
+
+    Vector2 arcoTeam;
+    Vector2 arcoOpposite;
+
+    void updatePositions();
+    
+    void startHeatMap();
+    void updateHeatMap();
 };
 
 #endif //_GAMEMODEL_H

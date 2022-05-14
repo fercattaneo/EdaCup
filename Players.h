@@ -34,9 +34,9 @@ public:
     vector<char> getArrayFromFloat(float payload);
     std::vector<char> getArrayFromSetPoint(setPoint_t payload);
     float getFloat(std::vector<char> vec);
-    coord_t proportionalPosition(coord_t originPos, coord_t finalPos, float proportion);
-    float calculateRotation(coord_t originPos, coord_t finalPos);
-    void goToBall (coord_t pointF);
+    Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion);
+    float calculateRotation(Vector2 originPos, Vector2 finalPos);
+    setPoint_t goToBall (Vector2 pointF);
 
     PLAYERS_POSITION fieldRol;
     void toEnablePlayer(void);
