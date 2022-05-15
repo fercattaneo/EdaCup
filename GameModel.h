@@ -42,12 +42,12 @@ typedef struct
 class GameModel : public MQTTListener
 {
 public:
-    GameModel(MQTTClient2 &mqttClient, char myTeam);
+    GameModel(MQTTClient2 &mqttClient, string myTeam);
     ~GameModel();
 
     void onMessage(string topic, vector<char> payload);
 
-    void start(string teamID);
+    void start(void);
     void suscribeToGameTopics();
     void setDisplay(string path, string robotID);
     void addPlayer(Players *bot);

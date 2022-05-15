@@ -4,15 +4,21 @@
 #include <cstring>
 #include "data.h"
 
+#define AT(x,z)  z*900 + x
+
 /////////////////          DESPUES VA A HABER Q BORRAR ESTA FUNCION
+/////////////////          NO LA BORREN HASTA NO TENER LISTO EL UPDATE DE MOVIMIENTO XQ ESTO ANDA
 void GameModel::testMovement()
 {
     setPoint_t destination = team[0]->goToBall(arcoOpposite,{ball[0],ball[2]});
     MQTTMessage setpointMessage = 
-        {"robot" + team[0]->teamID + "." + team[0]->robotID + "/pid/setpoint/set",
+        {"robot" + teamID + "." + team[0]->robotID + "/pid/setpoint/set",
             getArrayFromSetPoint(destination)};
     mqttClient->publish(setpointMessage.topic, setpointMessage.payload);
     cout << "ESTO DEBERIA MOVER A UN ROBOT" << endl;
+    cout << setpointMessage.topic << endl;   //esto es para ver si esta bien el topic
+    cout << ball[0] << "," << ball[2]<< endl;  //esto es para ver bien las coordenadas de la bocha
+    cout << "rotacion: " << destination.rotation << endl;
 }
 //////////////////
 
@@ -20,19 +26,23 @@ void GameModel::testMovement()
 * @brief
 *
 */
-GameModel::GameModel(MQTTClient2 &mqttClient, char myTeam)
+GameModel::GameModel(MQTTClient2 &mqttClient, string myTeam)
 {
     this->mqttClient = &mqttClient;
-    this->teamID = to_string(myTeam);
+    this->teamID = myTeam;
     Vector2 arco1 = {0.45, 0.0}; //verificar coordenadas
     Vector2 arco2 = {-0.45, 0.0};
-    this->arcoTeam = (myTeam == '1') ? arco1 : arco2;
-    this->arcoOpposite = (myTeam == '1') ? arco2 : arco1;
+    this->arcoTeam = (myTeam == "1") ? arco1 : arco2;
+    this->arcoOpposite = (myTeam == "1") ? arco2 : arco1;
+    for(int i = 0; i<12;i++)
+    {
+        this->ball[i] = 0;
+    }
 };
 
-GameModel::~GameModel(){
+GameModel::~GameModel()
+{
     // borrar a todos los players xDDDD
-
 };
 
 /**
@@ -71,15 +81,17 @@ void GameModel::onMessage(string topic, vector<char> payload)
 * @brief
 *
 */
-void GameModel::start(string teamID)
+void GameModel::start(void)
 {
-    for (int playerNumber = 1; playerNumber <= team.size(); playerNumber++)
+    cout << "GameModel START" << endl;
+    cout << "team size: " << team.size() << endl;
+    for (int playerNumber = 0; playerNumber < team.size(); playerNumber++)
     {
-        team[playerNumber]->start(to_string(playerNumber));
+        team[playerNumber]->start(to_string(playerNumber +1));
+        cout << "player added" << endl;
     }
-
-    this->teamID = teamID;
-    startHeatMap();
+    cout << "GameModel START ended" << endl;
+    // startHeatMap();
 }
 
 /**
@@ -176,7 +188,13 @@ void GameModel::startHeatMap()
 
 void GameModel::updateHeatMap()
 {
-       
+    int coordX;
+    int coordY;
+
+    for(auto i : team)
+    {
+        //coordx = 100i->position.x;
+    }
 }
 
 void GameModel::setDisplay(string path, string robotID)

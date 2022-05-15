@@ -8,7 +8,7 @@
 using namespace std;
 
 void subscribeGameTopics(MQTTClient2 &client);
-void subscribeRobotTopics(MQTTClient2 &client, char team);
+void subscribeRobotTopics(MQTTClient2 &client, string team);
 
 int main(int argc, char *argv[])
 {
@@ -32,23 +32,23 @@ int main(int argc, char *argv[])
     }
 
     //char myTeam = *argv[1];
-    char myTeam = '1';
+    string myTeam = "1";
     GameModel gameModel(client, myTeam);
 
     //
     Players player1;
     gameModel.addPlayer(&player1);
     
-    string myTeamStr(1, myTeam);
-    gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeamStr + ".1");
-    gameModel.setDisplay(IMAGES_PATH + "Robot2.png", "robot" + myTeamStr + ".2");
-    gameModel.setDisplay(IMAGES_PATH + "Robot3.png", "robot" + myTeamStr + ".3");
-    gameModel.setDisplay(IMAGES_PATH + "Robot4.png", "robot" + myTeamStr + ".4");
-    gameModel.setDisplay(IMAGES_PATH + "Robot8.png", "robot" + myTeamStr + ".5");
-    gameModel.setDisplay(IMAGES_PATH + "Robot10.png", "robot" + myTeamStr + ".6");
+    gameModel.setDisplay(IMAGES_PATH + "Robot10.png", "robot" + myTeam + ".1");
+    gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeam + ".2");
+    gameModel.setDisplay(IMAGES_PATH + "Robot3.png", "robot" + myTeam + ".3");
+    gameModel.setDisplay(IMAGES_PATH + "Robot4.png", "robot" + myTeam + ".4");
+    gameModel.setDisplay(IMAGES_PATH + "Robot8.png", "robot" + myTeam + ".5");
+    gameModel.setDisplay(IMAGES_PATH + "Robot10.png", "robot" + myTeam + ".6");
 
     gameModel.suscribeToGameTopics();
     subscribeRobotTopics(client, myTeam);
+    gameModel.start();
 
     client.setListener(&gameModel);
 
