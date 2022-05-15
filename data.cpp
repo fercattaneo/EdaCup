@@ -4,7 +4,6 @@ using namespace std;
 
 vector<char> getArrayFromSetPoint(setPoint_t setpoint)
 {
-
 	vector<char> payload(12);
 
 	*((float*)&payload[0]) = setpoint.coord.x;
@@ -54,22 +53,22 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos)
 	if (deltaX == 0 && deltaZ == 0)
 	{
 		cout << "Same Position delivered" << endl;
-		return 0;
+		return 180;
 	}
 	if (deltaZ == 0)
 	{
-		//cout << "Invalid Angle, aprox to 90°" << endl;
-		return 90;
+		//cout << "Invalid Angle, aprox to -90°" << endl;
+		return 270;
 	}
 	if (deltaX == 0)
 	{
-		//cout << "Invalid Angle, aprox to 0°" << endl;
-		return 0;
+		//cout << "Invalid Angle, aprox to 180°" << endl;
+		return 180;
 	}
 
 	float angle = 1 / (std::tan(deltaX / deltaZ)); // angulo en radianes
 	angle = angle * (180 / PI);					   // conversion a grados sexagecimales
-	return angle;
+	return angle+180;
 
 	// creo que para los robots el angulo va a tener q ser el q recibe pero negativo
 	// correccion: angulo - 90, no negativo xq es en referencia al eje z
