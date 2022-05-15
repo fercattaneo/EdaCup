@@ -12,7 +12,9 @@ void subscribeRobotTopics(MQTTClient2 &client, string team);
 
 int main(int argc, char *argv[])
 {
-    string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/"; // /../../Resources
+    // string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/"; // /../../Resources
+    string IMAGES_PATH = "../Resources/";
+
     /*if (argc < 2)
     {
         cout << "ERROR: invalid paramenters -> [program] [team number]" << endl;

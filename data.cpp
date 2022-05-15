@@ -1,6 +1,4 @@
 #include "data.h"
-#include <iostream>
-#include <deque>
 
 using namespace std;
 

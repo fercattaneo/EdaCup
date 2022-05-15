@@ -18,7 +18,6 @@ void Players::start(string playerNumber)
 	robotID = playerNumber.c_str();
 }
 
-
 // Función para hacer funcionar el Kricker y el Chipper.
 // Estos se activan con la tecla ENTER
 // void Players::setKickerChipper()
