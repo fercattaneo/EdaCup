@@ -28,10 +28,9 @@ public:
     ~Players();
 
     void start(string playerNumber);
-    void setDribbler();
-    void setKickerChipper();
     void moveMotors();
-    setPoint_t goToBall (Vector2 oppositeGoal, Vector2 ballPosition);  
+    setPoint_t goToBall (Vector2 oppositeGoal, Vector2 ballPosition, float proportional);  
+    setPoint_t kickBallLogic (Vector2 oppositeGoal, Vector2 ballPosition);
 
     PLAYERS_POSITION fieldRol;
     void toEnablePlayer(void);

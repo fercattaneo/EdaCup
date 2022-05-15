@@ -24,6 +24,7 @@ std::vector<char> getArrayFromSetPoint(setPoint_t setpoint);
 float getFloat(std::vector<char> vec);
 Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion);
 float calculateRotation(Vector2 originPos, Vector2 finalPos);
+bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord);
 
 #endif
 

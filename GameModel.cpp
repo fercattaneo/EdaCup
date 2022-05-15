@@ -1,18 +1,13 @@
 #include "GameModel.h"
-#include <iostream>
-#include <cmath>
-#include <cstring>
-#include "data.h"
 
-#define AT(x,z)  z*900 + x
+#define AT(x,z)  ((z)*900 + (x))
 
 /////////////////          DESPUES VA A HABER Q BORRAR ESTA FUNCION
 /////////////////          NO LA BORREN HASTA NO TENER LISTO EL UPDATE DE MOVIMIENTO XQ ESTO ANDA
 void GameModel::testMovement()
 {
-    setPoint_t destination = team[0]->goToBall(arcoOpposite,{ball[0],ball[2]});
-    MQTTMessage setpointMessage = 
-        {"robot" + teamID + "." + team[0]->robotID + "/pid/setpoint/set",
+    setPoint_t destination = team[0]->goToBall(arcoOpposite,{ball[0],ball[2]},1.05f);
+    MQTTMessage setpointMessage = {"robot" + teamID + "." + team[0]->robotID + "/pid/setpoint/set",
             getArrayFromSetPoint(destination)};
     mqttClient->publish(setpointMessage.topic, setpointMessage.payload);
     cout << "ESTO DEBERIA MOVER A UN ROBOT" << endl;
@@ -30,20 +25,21 @@ GameModel::GameModel(MQTTClient2 &mqttClient, string myTeam)
 {
     this->mqttClient = &mqttClient;
     this->teamID = myTeam;
-    Vector2 arco1 = {0.45, 0.0}; //verificar coordenadas
-    Vector2 arco2 = {-0.45, 0.0};
-    this->arcoTeam = (myTeam == "1") ? arco1 : arco2;
-    this->arcoOpposite = (myTeam == "1") ? arco2 : arco1;
-    for(int i = 0; i<12;i++)
+    Vector2 arco1 = {4.5f,0.0f};
+    Vector2 arco2 = {-4.5f,0.0f};
+    arcoTeam = (myTeam == "1") ? arco1 : arco2;
+    arcoOpposite = (myTeam == "1") ? arco2 : arco1;
+    for(int i = 0; i<12; i++)
     {
         this->ball[i] = 0;
     }
-};
+    this->ball[0] = 1.5;
+}
 
 GameModel::~GameModel()
 {
     // borrar a todos los players xDDDD
-};
+}
 
 /**
 * @brief
@@ -165,7 +161,7 @@ void GameModel::updatePositions(void)
 {
     for(auto teamRobot : team)
     {
-        setPoint_t destination = teamRobot->goToBall(arcoOpposite,{ball[0],ball[2]});
+        setPoint_t destination = teamRobot->goToBall(arcoOpposite,{ball[0],ball[2]}, 1.05f);
         MQTTMessage setpointMessage = 
             {"robot" + teamRobot->teamID + "." + teamRobot->robotID + "/pid/setpoint/set",
                 getArrayFromSetPoint(destination)};
@@ -189,25 +185,95 @@ void GameModel::startHeatMap()
 void GameModel::updateHeatMap()
 {
     int coordX;
-    int coordY;
-
+    int coordZ;
+    
     for(auto i : team)
     {
-        //coordx = 100i->position.x;
+        coordX = (int) 100 * ( 4.5F + i->getPosition().x);
+        coordZ = (int) 100 * ( 3.0F + i->getPosition().z);
+
+        heatMap[AT(coordX,coordZ)].type = 1;
     }
+
+    coordX = (int)100 *(4.5F + ball[0]);
+    coordZ = (int)100 *(3.0F + ball[2]);
+
+    for(int contx = 0 ; contx < 5 ; contx++)
+        for(int conty = 0 ; conty < 5 ; conty++)
+            heatMap[AT(coordX,coordZ)].type = 2;
 }
 
 void GameModel::setDisplay(string path, string robotID)
 {
     Image displayImage = LoadImage(path.c_str());
+    ImageFormat(&displayImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8); 
 
 	const int dataSize = 16 * 16 * 3;
 	vector<char> payload(dataSize);
 	memcpy(payload.data(), displayImage.data, dataSize);
 
-	// mqttClient->publish(robotID + "/display/lcd/set", payload);
 	MQTTMessage setDisplayMessage = {robotID + "/display/lcd/set", payload};
 	messagesToSend.push_back(setDisplayMessage);
 
     UnloadImage(displayImage);
+}
+
+void GameModel::voltageKickerChipper(string robotID)
+{
+    float voltage = 100.0;
+    vector<char> payload = getData(voltage);
+    MQTTMessage setKicker = {robotID + "/kicker/chargeVoltage/set", payload};
+    messagesToSend.push_back(setKicker);
+}
+
+void GameModel::setDribbler(string robotID)
+{
+    float voltage = 100.0;
+    vector<char> payload = getData(voltage);
+    MQTTMessage setKicker = {robotID + "/dribbler/voltage/set", payload};
+    messagesToSend.push_back(setKicker);
+}
+
+void GameModel::setKicker (string robotID)
+{
+    float potencia = 0.8;
+    vector<char> payload = getData(potencia);
+    MQTTMessage setKicker = {robotID + "/kicker/kick/cmd", payload};
+    messagesToSend.push_back(setKicker);
+}
+
+void GameModel::setChipper(string robotID)
+{
+    float potencia = 0.8;
+    vector<char> payload = getData(potencia);
+    MQTTMessage setKicker = {robotID + "/kicker/chip/cmd", payload};
+    messagesToSend.push_back(setKicker);
+}
+
+void GameModel::shootToGoal(Players* player)
+{
+    setPoint_t placeInCourt = player->kickBallLogic(arcoOpposite, {ball[0],ball[2]});
+    setPoint_t kickValue = {100,100,100};
+    if((placeInCourt.coord.x == kickValue.coord.x) &&
+        (placeInCourt.coord.y == kickValue.coord.y) &&
+        (placeInCourt.rotation == kickValue.rotation))   //comparacion de igualdad de setpoints
+    {
+        setKicker(player->robotID);
+        voltageKickerChipper(player->robotID);   //este orden por el pop_back del vector
+    }
+    else     //mover hasta el setpoint indicado
+    {
+        vector<char> payload = getArrayFromSetPoint(placeInCourt);
+        MQTTMessage setPosition = 
+            {"robot" + teamID + "." + player->robotID + "/pid/setpoint/set", payload};
+        messagesToSend.push_back(setPosition);
+    }
+}
+
+bool GameModel::isBallStill(void)
+{
+    if((ball[3]==0) && (ball[4]==0) && (ball[5]==0)) 
+        return true;
+    else
+        return false;
 }

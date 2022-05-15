@@ -58,12 +58,12 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos)
 	}
 	if (deltaZ == 0)
 	{
-		cout << "Invalid Angle, aprox to 90°" << endl;
+		//cout << "Invalid Angle, aprox to 90°" << endl;
 		return 90;
 	}
 	if (deltaX == 0)
 	{
-		cout << "Invalid Angle, aprox to 0°" << endl;
+		//cout << "Invalid Angle, aprox to 0°" << endl;
 		return 0;
 	}
 
@@ -93,4 +93,19 @@ void separateString (string topic,  deque<string>cadena)
 		}
 		ptrString++;   //voy al prox caracter
 	}
+}
+
+/*
+* Recives 2 coordinates and if the origin coord is close to destination returns true
+*/
+bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord)
+{
+	float nearRange = 0.01;
+	if((originCoord.x) <= (destinationCoord.x + nearRange) &&
+		(originCoord.x) >= (destinationCoord.x - nearRange) &&
+		(originCoord.y) <= (destinationCoord.y + nearRange) &&
+		(originCoord.y) >= (destinationCoord.y - nearRange))
+		return true;
+	else 
+		return false;
 }

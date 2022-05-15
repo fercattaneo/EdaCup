@@ -2,9 +2,11 @@
 #define _GAMEMODEL_H
 
 #include "MQTTClient2.h"
+#include <iostream>
 #include <vector>
 #include <array>
-// #include "Robot.h"
+#include <cmath>
+#include <cstring>
 #include "Players.h"
 #include "data.h"
 
@@ -52,8 +54,14 @@ public:
     void setDisplay(string path, string robotID);
     void addPlayer(Players *bot);
     void removePlayer(Players *bot);
+    void voltageKickerChipper(string robotID);
+    void setDribbler(string robotID);
+    void shootToGoal(Players* player);
+    void setChipper(string robotID);
+    void setKicker(string robotID);
 
     coord_t getProxPosBall2D (Vector3 ballPosition, Vector3 ballVelocity);
+    bool isBallStill(void);
     
     void testMovement(); //DESPUES HAY Q SACARLA
     string getTeamID();

@@ -24,10 +24,20 @@ public:
     string teamID;
     string robotID;
 
+    Vector3 getPosition();
+    Vector3 getRotation();
+    Vector3 getSpeed();
+    Vector3 getAngularSpeed();
+
+    void setPosition(Vector3 newPos);
+    void setRotation(Vector3 newRot);
+    void setSpeed(Vector3 newSpeed);
+    void setAngularSpeed(Vector3 newAngSpeed);
+
 protected:
     Vector3 position;
-    Vector3 speed;
     Vector3 rotation;
+    Vector3 speed;
     Vector3 angularSpeed;
 };
 

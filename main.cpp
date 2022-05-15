@@ -12,8 +12,8 @@ void subscribeRobotTopics(MQTTClient2 &client, string team);
 
 int main(int argc, char *argv[])
 {
-    // string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/"; // /../../Resources
-    string IMAGES_PATH = "../../Resources/";
+    string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/"; // /../../Resources
+    // string IMAGES_PATH = "../../Resources/";
 
     /*if (argc < 2)
     {
@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
     Players player1;
     gameModel.addPlayer(&player1);
     
-    gameModel.setDisplay(IMAGES_PATH + "Robot10.png", "robot" + myTeam + ".1");
-    gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeam + ".2");
+    gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeam + ".1");
+    gameModel.setDisplay(IMAGES_PATH + "Robot2.png", "robot" + myTeam + ".2");
     gameModel.setDisplay(IMAGES_PATH + "Robot3.png", "robot" + myTeam + ".3");
     gameModel.setDisplay(IMAGES_PATH + "Robot4.png", "robot" + myTeam + ".4");
     gameModel.setDisplay(IMAGES_PATH + "Robot8.png", "robot" + myTeam + ".5");
@@ -59,6 +59,15 @@ int main(int argc, char *argv[])
 ///////////////////////////////////
     gameModel.testMovement();
 ///////////////////////////////////
+
+    while(true)    //esto se va a romper, lo se
+    {
+        if(gameModel.isBallStill())
+        {
+            //falta update de los mensajes y de la posicion de la bocha/jugador
+            gameModel.shootToGoal(&player1);
+        }
+    }   
     
     client.run();
     cout << "Game MQTT subscription ended..." << endl;
