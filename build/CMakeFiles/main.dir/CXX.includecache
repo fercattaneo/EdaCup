@@ -6,18 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/GameModel.cpp
-GameModel.h
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/GameModel.h
-iostream
--
-cmath
--
-cstring
--
-data.h
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/data.h
-
 /home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/GameModel.h
 MQTTClient2.h
 /home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/MQTTClient2.h
@@ -37,10 +25,6 @@ vector
 -
 mosquitto.h
 -
-
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/Players.cpp
-Players.h
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/Players.h
 
 /home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/Players.h
 Robot.h
@@ -65,10 +49,6 @@ raylib.h
 /home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/raylib.h
 string
 -
-
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/data.cpp
-data.h
-/home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/data.h
 
 /home/ezequiel/Desktop/Ezequiel/ITBA/EDA/Code/Level6/EdaCup/data.h
 iostream
