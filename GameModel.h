@@ -59,6 +59,7 @@ public:
     void shootToGoal(Players* player);
     void setChipper(string robotID);
     void setKicker(string robotID);
+    void setSetpoint(setPoint_t setpoint, string robotID);
 
     coord_t getProxPosBall2D (Vector3 ballPosition, Vector3 ballVelocity);
     bool isBallStill(void);

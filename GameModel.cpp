@@ -7,11 +7,13 @@
 void GameModel::testMovement()
 {
     setPoint_t destination = team[0]->goToBall(arcoOpposite,{ball[0],ball[2]},1.05f);
-    MQTTMessage setpointMessage = {"robot" + teamID + "." + team[0]->robotID + "/pid/setpoint/set",
-            getArrayFromSetPoint(destination)};
-    mqttClient->publish(setpointMessage.topic, setpointMessage.payload);
+    // MQTTMessage setpointMessage = {"robot" + teamID + "." + team[0]->robotID + "/pid/setpoint/set",
+    //         getArrayFromSetPoint(destination)};
+    // mqttClient->publish(setpointMessage.topic, setpointMessage.payload);
+    setSetpoint(destination, "1");
+    
     cout << "ESTO DEBERIA MOVER A UN ROBOT" << endl;
-    cout << setpointMessage.topic << endl;   //esto es para ver si esta bien el topic
+    // cout << setpointMessage.topic << endl;   //esto es para ver si esta bien el topic
     cout << ball[0] << "," << ball[2]<< endl;  //esto es para ver bien las coordenadas de la bocha
     cout << "rotacion: " << destination.rotation << endl;
 }
@@ -206,7 +208,7 @@ void GameModel::updateHeatMap()
 void GameModel::setDisplay(string path, string robotID)
 {
     Image displayImage = LoadImage(path.c_str());
-    ImageFormat(&displayImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8); 
+    ImageFormat(&displayImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8); // a Robot10.png no le cambia el formato
 
 	const int dataSize = 16 * 16 * 3;
 	vector<char> payload(dataSize);
@@ -276,4 +278,17 @@ bool GameModel::isBallStill(void)
         return true;
     else
         return false;
+}
+
+/**
+ * @brief agrega un setpoint de RobotID a messagesToSend 
+ * 
+ * @param setpoint 
+ * @param robotID 
+ */
+void GameModel::setSetpoint(setPoint_t setpoint, string robotID)
+{
+    MQTTMessage setpointMessage = {"robot" + teamID + "." + robotID + "/pid/setpoint/set",
+                                   getArrayFromSetPoint(setpoint)};
+    messagesToSend.push_back(setpointMessage);
 }

@@ -13,7 +13,7 @@ void subscribeRobotTopics(MQTTClient2 &client, string team);
 int main(int argc, char *argv[])
 {
     string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/"; // /../../Resources
-    // string IMAGES_PATH = "../../Resources/";
+    // string IMAGES_PATH = "../Resources/";
 
     /*if (argc < 2)
     {
@@ -60,14 +60,14 @@ int main(int argc, char *argv[])
     gameModel.testMovement();
 ///////////////////////////////////
 
-    while(true)    //esto se va a romper, lo se
-    {
-        if(gameModel.isBallStill())
-        {
-            //falta update de los mensajes y de la posicion de la bocha/jugador
-            gameModel.shootToGoal(&player1);
-        }
-    }   
+    // while(true)    //esto se va a romper, lo se
+    // {
+    //     if(gameModel.isBallStill())
+    //     {
+    //         //falta update de los mensajes y de la posicion de la bocha/jugador
+    //         gameModel.shootToGoal(&player1);
+    //     }
+    // }   
     
     client.run();
     cout << "Game MQTT subscription ended..." << endl;
