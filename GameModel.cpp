@@ -27,6 +27,7 @@ GameModel::GameModel(MQTTClient2 &mqttClient, string myTeam)
 {
     this->mqttClient = &mqttClient;
     this->teamID = myTeam;
+    this->oppTeamID = (myTeam=="1") ? "2" : "1";
     Vector2 arco1 = {4.5f,0.0f};
     Vector2 arco2 = {-4.5f,0.0f};
     arcoTeam = (myTeam == "1") ? arco1 : arco2;
@@ -36,11 +37,25 @@ GameModel::GameModel(MQTTClient2 &mqttClient, string myTeam)
         this->ball[i] = 0;
     }
     this->ball[0] = 1.5;
+
+    Robot enemy1;
+    oppTeam.push_back(&enemy1);
+    Robot enemy2;
+    oppTeam.push_back(&enemy2);
+    Robot enemy3;
+    oppTeam.push_back(&enemy3);
+    Robot enemy4;
+    oppTeam.push_back(&enemy4);
+    Robot enemy5;
+    oppTeam.push_back(&enemy5);
+    Robot enemy6;
+    oppTeam.push_back(&enemy6);
 }
 
 GameModel::~GameModel()
 {
-    // borrar a todos los players xDDDD
+    team.clear();
+    oppTeam.clear();
 }
 
 /**
@@ -48,23 +63,12 @@ GameModel::~GameModel()
 *
 */
 void GameModel::onMessage(string topic, vector<char> payload)
-{
-    // cout << topic << endl;
-    // if (!topic.compare("ball/motion/state"))
-    // {
-    //     float datos[12]; 
-    //     memcpy(datos, &payload[0], std::min(payload.size(),sizeof(datos)));
-    //     setPoint_t destination = { {datos[0], datos[2]}, 0 };
-    //     mqttClient->publish("robot1.1/pid/setpoint/set", team[0]->getArrayFromSetPoint(destination));
-    // }
-
-    ////////////////////
-    //guardar los msj recibidos
-    MQTTMessage incomingMessage = { topic, payload }; // #
-    messagesReceived.push_back(incomingMessage); //#######
-    if(!topic.compare("ball/motion/state")) 
+{  
+    if(!topic.compare("ball/motion/state"))  //compare returns 0 if are equal
     {
-        //procesamiento ("analizamos topic", luego transformamos a datos utiles, calculos, mandarlo a messagesToSend)
+        memcpy(&ball,&payload,(sizeof(ball)/sizeof(ball[0])));
+        //updateDeltaTime();  //HAY Q HACER ESTOS UPDATES
+        //updateGameModel();  //ORIENTARLO SEGUN EL GAMESTATE (PARA LA PROX ENTREGA)
         while (!messagesToSend.empty())   //sends all messages appended to message vector
         {
             MQTTMessage actualMessage = messagesToSend.back();
@@ -72,7 +76,68 @@ void GameModel::onMessage(string topic, vector<char> payload)
             messagesToSend.pop_back();
         }
     }
-    //LLAMO A FUNCION DE CLASIFICAR TOPICS
+    else
+    {
+        assignMessagePayload(topic, payload);
+    }
+}
+
+void GameModel::assignMessagePayload(string topic, vector<char> payload)
+{
+    deque<string> segmentedTopic;
+    separateString(topic, segmentedTopic);
+
+    if(segmentedTopic[0] == "edacup")  //game state messagge
+    {
+        if(segmentedTopic[1] == "preKickOff")
+            gameState = PRE_KICKOFF;
+        else if(segmentedTopic[1] == "kickOff")
+            gameState = KICKOFF;
+        else if(segmentedTopic[1] == "preFreeKick")
+            gameState = PRE_FREEKICK;
+        else if(segmentedTopic[1] == "freereeKick")
+            gameState = FREEKICK;
+        else if(segmentedTopic[1] == "prePenaltyKick")
+            gameState = PRE_PENALTY;
+        else if(segmentedTopic[1] == "penaltyKick")
+            gameState = PENALTY;
+        else if(segmentedTopic[1] == "pause")
+            gameState = PAUSE;
+        else if(segmentedTopic[1] == "continue")
+            gameState = CONTINUE;
+        else if(segmentedTopic[1] == "removeRobot")
+            gameState = REMOVE_ROBOT;
+        else if(segmentedTopic[1] == "addRobot")
+            gameState = ADD_ROBOT;
+        else
+            cout << "FAILURE: INVALID GAMESTATE MESSAGE RECIVED" << endl;
+    }
+    else if(segmentedTopic[0].compare(5,1,teamID) == 0)  //the robot belongs to the team
+    {
+        char * ptrCharInSting = (char*) &segmentedTopic[0];
+        int robotIndex = *(ptrCharInSting + 7) - '0';   //gets the number of robot of the team
+        float payloadToFloat [12];
+        memcpy(&payloadToFloat, &payload, 12);
+        team[robotIndex - 1]->setPosition({payloadToFloat[0],payloadToFloat[1],payloadToFloat[2]});
+        team[robotIndex - 1]->setSpeed({payloadToFloat[3],payloadToFloat[4],payloadToFloat[5]});
+        team[robotIndex - 1]->setRotation({payloadToFloat[6],payloadToFloat[7],payloadToFloat[8]});
+        team[robotIndex - 1]->setAngularSpeed({payloadToFloat[9],payloadToFloat[10],payloadToFloat[11]});
+    }
+    else if(segmentedTopic[0].compare(5,1,oppTeamID) == 0)  //the robot belongs to opposite team
+    {
+        char * ptrCharInSting = (char*) &segmentedTopic[0];
+        int robotIndex = *(ptrCharInSting + 7) - '0';   //gets the number of robot of the oppTeam
+        float payloadToFloat [12];
+        memcpy(&payloadToFloat, &payload, 12);
+        oppTeam[robotIndex - 1]->setPosition({payloadToFloat[0],payloadToFloat[1],payloadToFloat[2]});
+        oppTeam[robotIndex - 1]->setSpeed({payloadToFloat[3],payloadToFloat[4],payloadToFloat[5]});
+        oppTeam[robotIndex - 1]->setRotation({payloadToFloat[6],payloadToFloat[7],payloadToFloat[8]});
+        oppTeam[robotIndex - 1]->setAngularSpeed({payloadToFloat[9],payloadToFloat[10],payloadToFloat[11]});
+    }
+    else   //error in the messagge recived or topic processing
+    {
+        cout << "FAILURE: INVALID MAIN TOPIC MESSAGE RECIVED" << endl;
+    }
 }
 
 /**

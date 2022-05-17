@@ -71,17 +71,18 @@ public:
     void updateTime(float deltaTime);
     void updatePositions();
 
-    vector<MQTTMessage> messagesReceived;
     vector<MQTTMessage> messagesToSend;
 
     
 private:
     string teamID;
+    string oppTeamID;
 
     MQTTClient2 *mqttClient;
     float deltaTime;
 
     vector<Players *> team;
+    vector<Robot *> oppTeam;
     float ball[12];
 
     array<tile_t, 540000> heatMap;
@@ -89,7 +90,8 @@ private:
     Vector2 arcoTeam;
     Vector2 arcoOpposite;
 
-    
+    void assignMessagePayload(string topic, vector<char> payload);
+
     void startHeatMap();
     void updateHeatMap();
 };
