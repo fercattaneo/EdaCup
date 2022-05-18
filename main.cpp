@@ -33,14 +33,14 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    //char myTeam = *argv[1];
+    // char myTeam = *argv[1];
     string myTeam = "1";
     GameModel gameModel(client, myTeam);
 
     //
     Players player1;
     gameModel.addPlayer(&player1);
-    
+
     gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeam + ".1");
     gameModel.setDisplay(IMAGES_PATH + "Robot2.png", "robot" + myTeam + ".2");
     gameModel.setDisplay(IMAGES_PATH + "Robot3.png", "robot" + myTeam + ".3");
@@ -55,10 +55,10 @@ int main(int argc, char *argv[])
     client.setListener(&gameModel);
 
     cout << "Game STARTING..." << endl;
-    
-///////////////////////////////////
-    gameModel.testMovement();
-///////////////////////////////////
+
+    ///////////////////////////////////
+    // gameModel.testMovement();
+    ///////////////////////////////////
 
     // while(true)    //esto se va a romper, lo se
     // {
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
     //         //falta update de los mensajes y de la posicion de la bocha/jugador
     //         gameModel.shootToGoal(&player1);
     //     }
-    // }   
-    
+    // }
+
     client.run();
     cout << "Game MQTT subscription ended..." << endl;
     cout << "Game ended successfully." << endl;
@@ -93,28 +93,21 @@ void subscribeRobotTopics(MQTTClient2 &client, string team)
     {
         string robotID = to_string(i);
         client.subscribe("robot" + myTeam + "." + robotID + "/motion/state");
-        client.subscribe("robot" + myTeam + "." + robotID + "/power/powerConsumption");
-        client.subscribe("robot" + myTeam + "." + robotID + "/power/batteryLevel");
+        //client.subscribe("robot" + myTeam + "." + robotID + "/power/state");
+        //client.subscribe("robot" + myTeam + "." + robotID + "/motors/state");
         client.subscribe("robot" + myTeam + "." + robotID + "/pid/setpoint/set");
         client.subscribe("robot" + myTeam + "." + robotID + "/pid/parameters/set");
 
         for (int j = 1; j < 5; j++) // motors loop
         {
             string motorNMBR = to_string(i);
-            client.subscribe("robot" + myTeam + "." + robotID + "/motor" + motorNMBR + "/voltage");
-            client.subscribe("robot" + myTeam + "." + robotID + "/motor" + motorNMBR + "/rpm");
-            client.subscribe("robot" + myTeam + "." + robotID + "/motor" + motorNMBR + "/temperature");
             client.subscribe("robot" + myTeam + "." + robotID + "/motor" + motorNMBR + "/voltage/set");
             client.subscribe("robot" + myTeam + "." + robotID + "/motor" + motorNMBR + "/current/set");
         }
 
-        client.subscribe("robot" + myTeam + "." + robotID + "/dribbler/voltage");
-        client.subscribe("robot" + myTeam + "." + robotID + "/dribbler/rpm");
-        client.subscribe("robot" + myTeam + "." + robotID + "/dribbler/temperature");
         client.subscribe("robot" + myTeam + "." + robotID + "/dribbler/voltage/set");
         client.subscribe("robot" + myTeam + "." + robotID + "/dribbler/current/set");
 
-        client.subscribe("robot" + myTeam + "." + robotID + "/kicker/voltage");
         client.subscribe("robot" + myTeam + "." + robotID + "/kicker/chargeVoltage/set");
         client.subscribe("robot" + myTeam + "." + robotID + "/kicker/kick/cmd");
         client.subscribe("robot" + myTeam + "." + robotID + "/kicker/chip/cmd");
@@ -124,9 +117,9 @@ void subscribeRobotTopics(MQTTClient2 &client, string team)
         client.subscribe("robot" + myTeam + "." + robotID + "/display/rightEye/cmd");
     }
 
-    for (int i = 1; i < 7; i++) // opponent´s robots
-    {
-        string robotID = to_string(i);
-        client.subscribe("robot" + oppositeTeam + "." + robotID + "/motion/state");
-    }
+    // for (int i = 1; i < 7; i++) // opponent´s robots
+    // {
+    //     string robotID = to_string(i);
+    //     client.subscribe("robot" + oppositeTeam + "." + robotID + "/motion/state");
+    // }
 }

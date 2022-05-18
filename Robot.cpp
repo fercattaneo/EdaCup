@@ -1,6 +1,6 @@
 #include "Robot.h"
 
-/* SETTERS */ 
+/* SETTERS */
 void Robot::setPosition(Vector3 pos)
 {
     position = pos;

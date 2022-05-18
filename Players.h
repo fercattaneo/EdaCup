@@ -29,8 +29,8 @@ public:
 
     void start(string playerNumber);
     void moveMotors();
-    setPoint_t goToBall (Vector2 oppositeGoal, Vector2 ballPosition, float proportional);  
-    setPoint_t kickBallLogic (Vector2 oppositeGoal, Vector2 ballPosition);
+    setPoint_t goToBall(Vector2 oppositeGoal, Vector2 ballPosition, float proportional);
+    setPoint_t kickBallLogic(Vector2 oppositeGoal, Vector2 ballPosition);
 
     PLAYERS_POSITION fieldRol;
     void toEnablePlayer(void);

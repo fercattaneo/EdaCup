@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include <deque>
 #include "Robot.h"
 #include <cstring>
 #include <cmath>
@@ -12,7 +11,7 @@
 template <typename T>
 std::vector<char> getData(T val)
 {
-    std::vector<char> data(sizeof(T));
+	std::vector<char> data(sizeof(T));
 
 	// Extraído de: https://www.cplusplus.com/reference/cstring/memcpy/
 	memcpy(data.data(), &val, sizeof(T));
@@ -21,10 +20,10 @@ std::vector<char> getData(T val)
 }
 
 std::vector<char> getArrayFromSetPoint(setPoint_t setpoint);
-float getFloat(std::vector<char> vec);
+float getFloat(vector<char> vec);
 Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion);
 float calculateRotation(Vector2 originPos, Vector2 finalPos);
 bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord);
+void separateString(string topic, vector<string> &segmentedTopic);
 
-#endif
-
+#endif()
