@@ -23,7 +23,6 @@ std::vector<char> getArrayFromSetPoint(setPoint_t setpoint);
 float getFloat(vector<char> vec);
 Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion);
 float calculateRotation(Vector2 originPos, Vector2 finalPos);
-bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord);
-void separateString(string topic, vector<string> &segmentedTopic);
+bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord, float nearRange);
 
-#endif()
+#endif		//  DATA_H

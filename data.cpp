@@ -39,6 +39,7 @@ float getFloat(vector<char> vec)
 Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proportion)
 {
 	Vector2 destination;
+
 	destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
 	destination.y = (finalPos.y - originPos.y) * proportion + originPos.y;
 	
@@ -47,18 +48,20 @@ Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proporti
 
 /*
  * @brief: calculates the rotation between 2 coordinates
+ *
  * @param: originPos - origin position of object
  * @param: finalPos - final position of reference
+ *
  * @return: angle in eulerian degrees
  */
-float calculateRotation(Vector2 originPos, Vector2 finalPos)
+float calculateRotation(Vector2 originPos, Vector2 finalPos) // OpositeGoal, ball Position
 {
 	float deltaX = finalPos.x - originPos.x;
 	float deltaZ = finalPos.y - originPos.y;
 
 	if (deltaX == 0 && deltaZ == 0)
 	{
-		cout << "Same Position delivered" << endl;
+		// cout << "Same Position delivered" << endl;
 		return 180;
 	}
 	if (deltaZ == 0)
@@ -72,9 +75,9 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos)
 		return 180;
 	}
 
-	float angle = 1 / (std::tan(deltaX / deltaZ)); // angulo en radianes
+	float angle = std::atan(deltaX / deltaZ); // angulo en radianes
 	angle = angle * (180 / PI);					   // conversion a grados sexagecimales
-	return angle + 180;
+	return angle;
 
 	// creo que para los robots el angulo va a tener q ser el q recibe pero negativo
 	// correccion: angulo - 90, no negativo xq es en referencia al eje z
@@ -82,35 +85,10 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos)
 }
 
 /*
-* @brief separates a string in a vector of strings divided by "/"
-* @param topic: original string
-* @param cadena: sequence of strings returned/appended
-*/
-void separateString(string topic, vector<string> &cadena)
-{
-	cadena.clear();
-
-	size_t pos = 0;
-	string space_delimiter = "/";
-	
-    while ((pos = topic.find(space_delimiter)) != string::npos) 
-	{
-        cadena.push_back(topic.substr(0, pos));
-        topic.erase(0, pos + space_delimiter.length());
-    }
-	cadena.push_back(topic);
-
-    // for (const auto &str : cadena) {
-    //     cout << str << endl;
-    // }
-}
-
-/*
- * Recives 2 coordinates and if the origin coord is close to destination returns true
+ * @brief Recives 2 coordinates and if the origin coord is close to destination returns true
  */
-bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord)
+bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord, float nearRange)
 {
-	float nearRange = 0.01;
 	if ((originCoord.x) <= (destinationCoord.x + nearRange) &&
 		(originCoord.x) >= (destinationCoord.x - nearRange) &&
 		(originCoord.y) <= (destinationCoord.y + nearRange) &&
