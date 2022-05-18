@@ -40,7 +40,17 @@ int main(int argc, char *argv[])
 
     //
     Players player1;
+    Players player2;
+    Players player3;
+    Players player4;
+    Players player5;
+    Players player6;
     gameModel.addPlayer(&player1);
+    gameModel.addPlayer(&player2);
+    gameModel.addPlayer(&player3);
+    gameModel.addPlayer(&player4);
+    gameModel.addPlayer(&player5);
+    gameModel.addPlayer(&player6);
 
     gameModel.setDisplay(IMAGES_PATH + "Robot1.png", "robot" + myTeam + ".1");
     gameModel.setDisplay(IMAGES_PATH + "Robot2.png", "robot" + myTeam + ".2");

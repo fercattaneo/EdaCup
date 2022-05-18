@@ -13,7 +13,7 @@ vector<char> getArrayFromSetPoint(setPoint_t setpoint)
 	return payload;
 }
 
-/*
+/**
 * @brief gets a float from a char vector
 * @param vec: sequence of bytes
 * @return float
@@ -29,7 +29,22 @@ float getFloat(vector<char> vec)
 	return value;
 }
 
-/*
+/**
+ * @brief Get the Data From Float object
+ * 
+ * @param data 
+ * @return vector<char> 
+ */
+vector<char> getDataFromFloat(float data)
+{
+	std::vector<char> payload(sizeof(float));
+
+	memcpy(payload.data(), &data, sizeof(float));
+
+	return payload;
+}
+
+/**
  * @brief: calculates the coordinate in reference from other 2 and a proportional value
  * @param: originPos - origin position of object
  * @param: finalPos - final position of reference
@@ -54,7 +69,7 @@ Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proporti
  *
  * @return: angle in eulerian degrees
  */
-float calculateRotation(Vector2 originPos, Vector2 finalPos) // OpositeGoal, ball Position
+float calculateRotation(Vector2 originPos, Vector2 finalPos)
 {
 	float deltaX = finalPos.x - originPos.x;
 	float deltaZ = finalPos.y - originPos.y;
@@ -75,8 +90,13 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos) // OpositeGoal, bal
 		return 180;
 	}
 
-	float angle = std::atan(deltaX / deltaZ); // angulo en radianes
-	angle = angle * (180 / PI);					   // conversion a grados sexagecimales
+	float angle = std::atan(deltaX / deltaZ);
+	if (deltaZ > 0 )
+	{
+		angle -= PI; // angulo en radianes
+	}
+	angle = angle * (180 / PI);	 // conversion a grados sexagecimales
+
 	return angle;
 
 	// creo que para los robots el angulo va a tener q ser el q recibe pero negativo
@@ -86,6 +106,8 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos) // OpositeGoal, bal
 
 /*
  * @brief Recives 2 coordinates and if the origin coord is close to destination returns true
+ *
+ *
  */
 bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord, float nearRange)
 {

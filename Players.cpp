@@ -16,6 +16,15 @@ void Players::start(string playerNumber)
 	robotID = playerNumber.c_str();
 }
 
+/**
+ * @brief 
+ * 
+ * @param oppositeGoal 
+ * @param ballPosition 
+ * @param proportional 
+ *
+ * @return setPoint_t 
+ */
 setPoint_t Players::goToBall(Vector2 oppositeGoal, Vector2 ballPosition, float proportional)
 {
 	setPoint_t destination;
@@ -26,18 +35,26 @@ setPoint_t Players::goToBall(Vector2 oppositeGoal, Vector2 ballPosition, float p
 	return destination;
 }
 
+/**
+ * @brief 
+ * 
+ * @param oppositeGoal 
+ * @param ballPosition 
+ *
+ * @return setPoint_t 
+ */
 setPoint_t Players::kickBallLogic(Vector2 oppositeGoal, Vector2 ballPosition)
 {
 	Vector2 nearBall = proportionalPosition(oppositeGoal, ballPosition, 1.05);
 	setPoint_t result;
 
-	if (isCloseTo({position.x, position.z}, nearBall, 1.0f))
+	if (isCloseTo({position.x, position.z}, nearBall, 0.1f))
 	{
 		// ver si estoy en posicion
-		if (isCloseTo({position.x, position.z}, ballPosition, 0.01f))
+		if (isCloseTo({position.x, position.z}, ballPosition, 0.13f))
 		{
 			result = {100, 100, 100}; // tiene q devolver un setpoint pero esto seria
-									  //  el comando para q al verlo patee
+									  // el comando para q al verlo patee
 		}
 		else
 			result = goToBall(oppositeGoal, ballPosition, 1.0f);
@@ -50,10 +67,10 @@ setPoint_t Players::kickBallLogic(Vector2 oppositeGoal, Vector2 ballPosition)
 
 void Players::toEnablePlayer(void)
 {
-	this->enablePlayer = true;
+	enablePlayer = true;
 }
 
 void Players::dissablePlayer(void)
 {
-	this->enablePlayer = false;
+	enablePlayer = false;
 }

@@ -94,8 +94,9 @@ void GameModel::onMessage(string topic, vector<char> payload)
 		assignMessagePayload(topic, payload); //queremos asignar los valores a los robots segun los topicos
 }
 
-/*
+/**
  * @brief analizes the topic and delivers the payload to the desired place ¿?
+
  * @param topic: string declaration of messagge´s topic
  * @param payload: data of the topic
  */
@@ -129,22 +130,12 @@ void GameModel::assignMessagePayload(string topic, vector<char>& payload)
 	}
 	else if (topic.compare(5, 1, teamID) == 0) // the robot belongs to the team
 	{
-		if (topic.compare(9, 5, "motion") == 0)
+		if (topic.compare(9, 6, "motion") == 0)
 		{
 			int robotIndex = topic[7] - '0';
 
 			float payloadToFloat[12];
-			memcpy(payloadToFloat, &payload, (12 * sizeof(float)));
-
-			// for (int i = 0; i < 12; i++)
-			// {
-			// 	if (payloadToFloat[i] < 0.00001)
-			// 	{
-			// 		payloadToFloat[i] = 0;
-			// 	}
-			// 	cout << payloadToFloat[i] << ",";
-			// }
-			// cout << endl;
+			memcpy(payloadToFloat, &payload[0], payload.size());
 
 			team[robotIndex - 1]->setPosition({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
 			team[robotIndex - 1]->setSpeed({ payloadToFloat[3], payloadToFloat[4], payloadToFloat[5] });
@@ -155,18 +146,12 @@ void GameModel::assignMessagePayload(string topic, vector<char>& payload)
 	}
 	else if (topic.compare(5, 1, oppTeamID) == 0) // the robot belongs to opposite team
 	{
-		if (topic.compare(9, 5, "motion") == 0)
+		if (topic.compare(9, 6, "motion") == 0)
 		{
 			int robotIndex = topic[7] - '0';
 
 			float payloadToFloat[12];
-			memcpy(payloadToFloat, &payload, (12 * sizeof(float)));
-
-			// for (int i = 0; i < 12; i++)
-			// {
-			// 	cout << payloadToFloat[i] << ",";
-			// }
-			// cout << endl;
+			memcpy(payloadToFloat, &payload[0], payload.size());
 			
             oppTeam[robotIndex - 1]->setPosition({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
 			oppTeam[robotIndex - 1]->setSpeed({ payloadToFloat[3], payloadToFloat[4], payloadToFloat[5] });
@@ -331,8 +316,9 @@ void GameModel::setDisplay(string path, string robotID)
 
 void GameModel::voltageKickerChipper(string robotID)
 {
+	cout << "CHARGE" << endl;
 	float voltage = 100.0;
-	vector<char> payload = getData(voltage);
+	vector<char> payload = getDataFromFloat(voltage);
 	MQTTMessage setKicker = { robotID + "/kicker/chargeVoltage/set", payload };
 	messagesToSend.push_back(setKicker);
 }
@@ -340,15 +326,16 @@ void GameModel::voltageKickerChipper(string robotID)
 void GameModel::setDribbler(string robotID)
 {
 	float voltage = 100.0;
-	vector<char> payload = getData(voltage);
+	vector<char> payload = getDataFromFloat(voltage);
 	MQTTMessage setKicker = { robotID + "/dribbler/voltage/set", payload };
 	messagesToSend.push_back(setKicker);
 }
 
 void GameModel::setKicker(string robotID)
 {
+	cout << "KICK" << endl;
 	float potencia = 0.8;
-	vector<char> payload = getData(potencia);
+	vector<char> payload = getDataFromFloat(potencia);
 	MQTTMessage setKicker = { robotID + "/kicker/kick/cmd", payload };
 	messagesToSend.push_back(setKicker);
 }
@@ -356,7 +343,7 @@ void GameModel::setKicker(string robotID)
 void GameModel::setChipper(string robotID)
 {
 	float potencia = 0.8;
-	vector<char> payload = getData(potencia);
+	vector<char> payload = getDataFromFloat(potencia);
 	MQTTMessage setKicker = { robotID + "/kicker/chip/cmd", payload };
 	messagesToSend.push_back(setKicker);
 }
