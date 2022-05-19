@@ -21,6 +21,11 @@ void Robot::setAngularSpeed(Vector3 newAngSpeed)
     angularSpeed = newAngSpeed;
 }
 
+void Robot::setPowerLevels(Vector3 powerValues)
+{
+    powerLevel = powerValues;
+}
+
 /* GETTERS */
 Vector3 Robot::getPosition()
 {
@@ -40,4 +45,9 @@ Vector3 Robot::getSpeed()
 Vector3 Robot::getAngularSpeed()
 {
     return angularSpeed;
+}
+
+float Robot::getKickerCharge()
+{
+    return powerLevel.z;
 }

@@ -104,7 +104,7 @@ void subscribeRobotTopics(MQTTClient2 &client, string team)
     {
         string robotID = to_string(i);
         client.subscribe("robot" + myTeam + "." + robotID + "/motion/state");
-        //client.subscribe("robot" + myTeam + "." + robotID + "/power/state");
+        client.subscribe("robot" + myTeam + "." + robotID + "/power/state");
         //client.subscribe("robot" + myTeam + "." + robotID + "/motors/state");
         client.subscribe("robot" + myTeam + "." + robotID + "/pid/setpoint/set");
         client.subscribe("robot" + myTeam + "." + robotID + "/pid/parameters/set");

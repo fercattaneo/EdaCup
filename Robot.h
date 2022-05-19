@@ -28,17 +28,20 @@ public:
     Vector3 getRotation();
     Vector3 getSpeed();
     Vector3 getAngularSpeed();
+    float getKickerCharge();
 
     void setPosition(Vector3 newPos);
     void setRotation(Vector3 newRot);
     void setSpeed(Vector3 newSpeed);
     void setAngularSpeed(Vector3 newAngSpeed);
+    void setPowerLevels(Vector3 powerValues);
 
 protected:
     Vector3 position;
     Vector3 rotation;
     Vector3 speed;
     Vector3 angularSpeed;
+    Vector3 powerLevel; // x for consume, y for battery level, z for kicker charge
 };
 
 #endif

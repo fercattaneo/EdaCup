@@ -87,6 +87,13 @@ private:
     vector<Robot *> oppTeam;
     float ball[12];
 
+    array<array<tile_t,450>,600> heatMap;
+
+    Vector2 arcoTeam;
+    Vector2 arcoOpposite;
+
+    void startHeatMap();
+    void updateHeatMap();
 /*
              UNIDAD METROS
        _________________________
@@ -108,14 +115,6 @@ private:
         heatMap[i] = new [450];;
     }
     */    
-    array<array<tile_t,450>,600> heatMap;
-
-    Vector2 arcoTeam;
-    Vector2 arcoOpposite;
-
-
-    void startHeatMap();
-    void updateHeatMap();
 };
 
 #endif //_GAMEMODEL_H
