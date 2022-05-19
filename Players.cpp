@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file Players.cpp
+* @date 20/05/2020
+* EDA - 22.08
+* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+* @brief Source file of the players class module.
+*******************************************************************/
 #include "Players.h"
 
 using namespace std;
@@ -10,6 +17,10 @@ Players::~Players()
 {
 }
 
+/*
+* @brief: assigns an identification number to the robot for simplifying the messagge recognition
+* @param playerNumber: string containing the indentification
+*/
 void Players::start(string playerNumber)
 {
 	// depende de la entrega
@@ -17,13 +28,13 @@ void Players::start(string playerNumber)
 }
 
 /**
- * @brief 
- * 
- * @param oppositeGoal 
- * @param ballPosition 
- * @param proportional 
+ * @brief calculates a court setpoint for the player
  *
- * @return setPoint_t 
+ * @param oppositeGoal: opposites team goal ~ where to shoot
+ * @param ballPosition: actual ball´s position ~ point of reference
+ * @param proportional: proportional value for position calculation
+ *
+ * @return destination: position in court and players rotation for shooting 
  */
 setPoint_t Players::goToBall(Vector2 oppositeGoal, Vector2 ballPosition, float proportional)
 {
@@ -31,31 +42,30 @@ setPoint_t Players::goToBall(Vector2 oppositeGoal, Vector2 ballPosition, float p
 
 	destination.coord = proportionalPosition(oppositeGoal, ballPosition, proportional);
 	destination.rotation = calculateRotation(oppositeGoal, ballPosition);
-	// falta calculo de rotacion
+
 	return destination;
 }
 
 /**
- * @brief 
- * 
- * @param oppositeGoal 
- * @param ballPosition 
+ * @brief non blocking logic for player reposition and shooting.
+ * If the player is too far, it aproaches to the ball, if its 
+ * quite near it gets even closer, and if its in the right
+ * position, it shoots.
  *
- * @return setPoint_t 
+ * @param oppositeGoal: opposites team goal ~ where to shoot
+ * @param ballPosition: actual ball´s position ~ point of reference
+ *
+ * @return result: position in court and players rotation for shooting 
  */
 setPoint_t Players::kickBallLogic(Vector2 oppositeGoal, Vector2 ballPosition)
 {
 	Vector2 nearBall = proportionalPosition(oppositeGoal, ballPosition, 1.05);
 	setPoint_t result;
 
-	if (isCloseTo({position.x, position.z}, nearBall, 0.15f))
+	if (isCloseTo({ position.x, position.z }, nearBall, 0.15f))
 	{
-		// ver si estoy en posicion
-		if (isCloseTo({position.x, position.z}, ballPosition, 0.1f))
-		{
-			result = {100, 100, 100}; // tiene q devolver un setpoint pero esto seria
-									  // el comando para q al verlo patee
-		}
+		if (isCloseTo({ position.x, position.z }, ballPosition, 0.1f))
+			result = { 100, 100, 100 }; // reference value designed for shooting command
 		else
 			result = goToBall(oppositeGoal, ballPosition, 1.0f);
 	}
@@ -65,11 +75,17 @@ setPoint_t Players::kickBallLogic(Vector2 oppositeGoal, Vector2 ballPosition)
 	return result;
 }
 
+/*
+* brief: enables robot for playing
+*/
 void Players::toEnablePlayer(void)
 {
 	enablePlayer = true;
 }
 
+/*
+* brief: dissables robot for playing
+*/
 void Players::dissablePlayer(void)
 {
 	enablePlayer = false;

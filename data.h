@@ -1,3 +1,11 @@
+/*******************************************************************
+* @file data.h
+* @date 20/05/2020
+* EDA - 22.08
+* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+* @brief Header file of the data module. Module prepared for 
+* multiple data types and usefull functions calculus.
+*******************************************************************/
 #ifndef DATA_H
 #define DATA_H
 
@@ -7,17 +15,6 @@
 #include <cstring>
 #include <cmath>
 #include <assert.h>
-
-// template <typename T>
-// std::vector<char> getData(T val)
-// {
-// 	std::vector<char> data(sizeof(T));
-
-// 	// Extraído de: https://www.cplusplus.com/reference/cstring/memcpy/
-// 	memcpy(data.data(), &val, sizeof(T));
-
-// 	return data;
-// }
 
 std::vector<char> getDataFromFloat(float data);
 std::vector<char> getArrayFromSetPoint(setPoint_t setpoint);

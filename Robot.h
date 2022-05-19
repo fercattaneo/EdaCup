@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file Robot.h
+* @date 20/05/2020
+* EDA - 22.08
+* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+* @brief Header file of the Robot class module.
+*******************************************************************/
 #ifndef ROBOT_H
 #define ROBOT_H
 
@@ -6,13 +13,13 @@
 
 using namespace std;
 
-typedef struct
+typedef struct      //court coordenates
 {
     float x;
     float z;
 } coord_t;
 
-typedef struct
+typedef struct         //robot position and rotation
 {
     Vector2 coord;
     float rotation;

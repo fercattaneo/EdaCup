@@ -1,3 +1,11 @@
+/*******************************************************************
+* @file data.cpp
+* @date 20/05/2020
+* EDA - 22.08
+* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+* @brief Source file of the data module. Module prepared for 
+* multiple data types and usefull functions calculus.
+*******************************************************************/
 #include "data.h"
 
 using namespace std;
@@ -93,21 +101,22 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos)
 	float angle = std::atan(deltaX / deltaZ);
 	if (deltaZ > 0 )
 	{
-		angle -= PI; // angulo en radianes
+		angle -= PI; // radians degrees
 	}
-	angle = angle * (180 / PI);	 // conversion a grados sexagecimales
+	angle = angle * (180 / PI);	 // grados sexagecimal degrees
 
 	return angle;
 
-	// creo que para los robots el angulo va a tener q ser el q recibe pero negativo
-	// correccion: angulo - 90, no negativo xq es en referencia al eje z
-	// ver bien despues in-game
 }
 
 /*
  * @brief Recives 2 coordinates and if the origin coord is close to destination returns true
  *
+ * @param: originPos - origin position of object
+ * @param: finalPos - final position of reference
+ * @param nearRange is the area to consider close
  *
+ * @return true if its considered near, if not, false
  */
 bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord, float nearRange)
 {
