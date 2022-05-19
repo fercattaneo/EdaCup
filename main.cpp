@@ -128,9 +128,9 @@ void subscribeRobotTopics(MQTTClient2 &client, string team)
         client.subscribe("robot" + myTeam + "." + robotID + "/display/rightEye/cmd");
     }
 
-    // for (int i = 1; i < 7; i++) // opponent´s robots
-    // {
-    //     string robotID = to_string(i);
+    for (int i = 1; i < 7; i++) // opponent´s robots
+    {
+        string robotID = to_string(i);
     //     client.subscribe("robot" + oppositeTeam + "." + robotID + "/motion/state");
     // }
 }

@@ -37,6 +37,16 @@ GameModel::GameModel(MQTTClient2& mqttClient, string myTeam)
 	}
 	this->ball[0] = 1.5;
 
+	float PIDparameters [6] = {4,0,4,0.1,3,0.005};
+	vector<char> payloadPID (6*sizeof(float));
+	memcpy(&payloadPID[0], PIDparameters, 6 * sizeof(float));
+
+	for(auto bot : team)
+	{
+		cout << "robot" + myTeam + "." + bot->robotID + "/pid/parameters/set" << endl;
+		this->mqttClient->publish("robot" + myTeam + "." + bot->robotID + "/pid/parameters/set", payloadPID);
+	}
+
 	Robot enemy1;
 	oppTeam.push_back(&enemy1);
 	Robot enemy2;
@@ -58,17 +68,33 @@ GameModel::~GameModel()
 	//destroyHeatMap();
 }
 
+
+/**
+ * @brief
+ *
+ */
+void GameModel::start()
+{
+	cout << "GameModel START" << endl;
+	cout << "team size: " << team.size() << endl;
+	for (int playerNumber = 0; playerNumber < team.size(); playerNumber++)
+	{
+		team[playerNumber]->start(to_string(playerNumber + 1));
+	}
+	cout << "GameModel START ended" << endl;
+
+	// startHeatMap();
+}
+
 void GameModel::update()
 {
-	// for (auto player : team)
-	// {
-	//     player->update();
-	// }
-	shootToGoal(team[0]); // para esta entrega solo hace falta esta funcion
+	if (!isCloseTo({ ball[0],ball[2] }, arcoOpposite, 0.75f))
+		shootToGoal(team[4]); // para esta entrega solo hace falta esta funcion
 }
 
 /**
  * @brief this function recives a message from MQTTclient and analizes the topic
+ *
  * @param topic: string declaration of messagge´s topic
  * @param payload: data of the topic
  *
@@ -96,7 +122,7 @@ void GameModel::onMessage(string topic, vector<char> payload)
 
 /**
  * @brief analizes the topic and delivers the payload to the desired place ¿?
-
+ *
  * @param topic: string declaration of messagge´s topic
  * @param payload: data of the topic
  */
@@ -130,26 +156,26 @@ void GameModel::assignMessagePayload(string topic, vector<char>& payload)
 	}
 	else if (topic.compare(5, 1, teamID) == 0) // the robot belongs to the team
 	{
-		 if (topic.compare(9, 6, "motion") == 0)
-		 {
-		 	int robotIndex = topic[7] - '0';
+		if (topic.compare(9, 6, "motion") == 0)
+		{
+			int robotIndex = topic[7] - '0';
 
-		 	float payloadToFloat[12];
-		 	memcpy(payloadToFloat, &payload[0], payload.size());
+			float payloadToFloat[12];
+			memcpy(payloadToFloat, &payload[0], payload.size());
 
-		 	team[robotIndex - 1]->setPosition({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
-		 	team[robotIndex - 1]->setSpeed({ payloadToFloat[3], payloadToFloat[4], payloadToFloat[5] });
-		 	team[robotIndex - 1]->setRotation({ payloadToFloat[6], payloadToFloat[7], payloadToFloat[8] });
-		 	team[robotIndex - 1]->setAngularSpeed({ payloadToFloat[9], payloadToFloat[10], payloadToFloat[11] });
-		 }
-		 else if (topic.compare(9, 11, "power/state") == 0)
-		 {
-			 int robotIndex = topic[7] - '0';
+			team[robotIndex - 1]->setPosition({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
+			team[robotIndex - 1]->setSpeed({ payloadToFloat[3], payloadToFloat[4], payloadToFloat[5] });
+			team[robotIndex - 1]->setRotation({ payloadToFloat[6], payloadToFloat[7], payloadToFloat[8] });
+			team[robotIndex - 1]->setAngularSpeed({ payloadToFloat[9], payloadToFloat[10], payloadToFloat[11] });
+		}
+		else if (topic.compare(9, 11, "power/state") == 0)
+		{
+			int robotIndex = topic[7] - '0';
 
-			 float payloadToFloat[3];
-			 memcpy(payloadToFloat, &payload[0], std::min(payload.size(), sizeof(payloadToFloat)));
+			float payloadToFloat[3];
+			memcpy(payloadToFloat, &payload[0], std::min(payload.size(), sizeof(payloadToFloat)));
 
-			 team[robotIndex - 1]->setPowerLevels({payloadToFloat[0], payloadToFloat[1], payloadToFloat[2]});
+			team[robotIndex - 1]->setPowerLevels({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
 		}
 
 	}
@@ -161,8 +187,8 @@ void GameModel::assignMessagePayload(string topic, vector<char>& payload)
 
 			float payloadToFloat[12];
 			memcpy(payloadToFloat, &payload[0], payload.size());
-			
-            oppTeam[robotIndex - 1]->setPosition({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
+
+			oppTeam[robotIndex - 1]->setPosition({ payloadToFloat[0], payloadToFloat[1], payloadToFloat[2] });
 			oppTeam[robotIndex - 1]->setSpeed({ payloadToFloat[3], payloadToFloat[4], payloadToFloat[5] });
 			oppTeam[robotIndex - 1]->setRotation({ payloadToFloat[6], payloadToFloat[7], payloadToFloat[8] });
 			oppTeam[robotIndex - 1]->setAngularSpeed({ payloadToFloat[9], payloadToFloat[10], payloadToFloat[11] });
@@ -172,22 +198,6 @@ void GameModel::assignMessagePayload(string topic, vector<char>& payload)
 	{
 		cout << "FAILURE: INVALID MAIN TOPIC MESSAGE RECIVED" << endl;
 	}
-}
-
-/**
- * @brief
- *
- */
-void GameModel::start(void)
-{
-	cout << "GameModel START" << endl;
-	cout << "team size: " << team.size() << endl;
-	for (int playerNumber = 0; playerNumber < team.size(); playerNumber++)
-	{
-		team[playerNumber]->start(to_string(playerNumber + 1));
-	}
-	cout << "GameModel START ended" << endl;
-	// startHeatMap();
 }
 
 /**
@@ -333,7 +343,7 @@ void GameModel::setDribbler(string robotID)
 {
 	float voltage = 100.0f;
 	vector<char> payload = getDataFromFloat(voltage);
-	MQTTMessage setKicker = {  "robot" + teamID + "." + robotID + "/dribbler/voltage/set", payload };
+	MQTTMessage setKicker = { "robot" + teamID + "." + robotID + "/dribbler/voltage/set", payload };
 	messagesToSend.push_back(setKicker);
 }
 
@@ -357,14 +367,16 @@ void GameModel::shootToGoal(Players* player)
 {
 	setPoint_t placeInCourt = player->kickBallLogic(arcoOpposite, { ball[0], ball[2] });
 	setPoint_t kickValue = { 100, 100, 100 };
-    
+
 	if ((placeInCourt.coord.x == kickValue.coord.x) &&
 		(placeInCourt.coord.y == kickValue.coord.y) &&
 		(placeInCourt.rotation == kickValue.rotation)) // comparacion de igualdad de setpoints
 	{
 		//setChipper(player->robotID);
-		if(player->getKickerCharge() >= 160)
-			setKicker(player->robotID);	
+		if (player->getKickerCharge() >= 160)
+		{
+			setKicker(player->robotID);
+		}
 		else
 			voltageKickerChipper(player->robotID); // este orden por el pop_back del vector	
 	}
