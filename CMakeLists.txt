@@ -38,9 +38,9 @@ else (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
                           OpenSSL::Crypto)
 endif()
 
+#Test
 ##enable_testing()
 
-#TODO SEPARA LAS FUNCIONES EN ARCHIVOS Y PONERLAS EN ESTE PARENTESIS
-##add_executable(main_test main_test.cpp logic.cpp text.cpp "text.h")
+##add_executable(main_test main_test.cpp data.cpp)
 
 ##add_test(NAME test1 COMMAND main_test)

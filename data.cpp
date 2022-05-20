@@ -128,3 +128,30 @@ bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord, float nearRange)
 	else
 		return false;
 }
+
+bool sameLine (Vector2 originPos, Vector2 finalPos, Vector2 mediumPos)
+{
+	float deltaX = finalPos.x - originPos.x;
+	float deltaY = finalPos.y - originPos.y;
+	if(deltaX == 0) //linea vertical
+	{
+		if((mediumPos.x - originPos.x) == 0) //pertenece a la linea
+		{
+			return true;
+		}
+	}
+	float pendiente = deltaY/deltaX;
+
+	float deltaX2 = mediumPos.x - originPos.x;
+	float deltaY2 = mediumPos.y - originPos.y;
+	if((deltaX2 == 0) && ((finalPos.x - mediumPos.x)<=0))
+	{
+		return true;
+	}
+	float pendiente2 = deltaY2/deltaX2;
+	if((pendiente2 >= (pendiente - 0.05)) && (pendiente2 <= (pendiente + 0.05)))
+	{
+		return true;
+	}
+	return false;
+}

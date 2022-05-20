@@ -31,7 +31,7 @@ void Players::start(string playerNumber)
  * @brief calculates a court setpoint for the player
  *
  * @param oppositeGoal: opposites team goal ~ where to shoot
- * @param ballPosition: actual ball´s position ~ point of reference
+ * @param ballPosition: actual ballï¿½s position ~ point of reference
  * @param proportional: proportional value for position calculation
  *
  * @return destination: position in court and players rotation for shooting 
@@ -53,26 +53,39 @@ setPoint_t Players::goToBall(Vector2 oppositeGoal, Vector2 ballPosition, float p
  * position, it shoots.
  *
  * @param oppositeGoal: opposites team goal ~ where to shoot
- * @param ballPosition: actual ball´s position ~ point of reference
+ * @param ballPosition: actual ballï¿½s position ~ point of reference
  *
  * @return result: position in court and players rotation for shooting 
  */
 setPoint_t Players::kickBallLogic(Vector2 oppositeGoal, Vector2 ballPosition)
 {
-	Vector2 nearBall = proportionalPosition(oppositeGoal, ballPosition, 1.05);
-	setPoint_t result;
+	Vector2 nearBall = proportionalPosition(oppositeGoal, ballPosition, 1.05f);
 
 	if (isCloseTo({ position.x, position.z }, nearBall, 0.15f))
 	{
 		if (isCloseTo({ position.x, position.z }, ballPosition, 0.1f))
-			result = { 100, 100, 100 }; // reference value designed for shooting command
+			return { 100, 100, 100 }; // reference value designed for shooting command
 		else
-			result = goToBall(oppositeGoal, ballPosition, 1.0f);
+			return goToBall(oppositeGoal, ballPosition, 1.0f);
 	}
 	else
-		result = goToBall(oppositeGoal, ballPosition, 1.05f);
+	{
+		setPoint_t result = goToBall(oppositeGoal, ballPosition, 1.05f);
+		if (sameLine({ position.x, position.z }, result.coord , ballPosition))
+		{
+			result.coord.x += 0.3;
+			if(((position.z * ballPosition.y) < 0) && (position.z > 0))
+				result.coord.y += 0.3;
+			else if(((position.z * ballPosition.y) < 0) && (position.z < 0))
+				result.coord.y -= 0.3;
+			else if(((position.z * ballPosition.y) > 0) && (position.z > 0))
+				result.coord.y -= 0.3;
+			else
+				result.coord.y += 0.3;
 
-	return result;
+		}
+		return result;
+	}
 }
 
 /*
@@ -90,3 +103,4 @@ void Players::dissablePlayer(void)
 {
 	enablePlayer = false;
 }
+

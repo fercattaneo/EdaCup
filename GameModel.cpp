@@ -30,7 +30,7 @@ GameModel::GameModel(MQTTClient2& mqttClient, string myTeam)
 	}
 	this->ball[0] = 1.5;
 
-	float PIDparameters[6] = { 4,0,4,0.1,3,0.005 };
+	float PIDparameters[6] = { 4,0,8,0,0,0.005 };
 	vector<char> payloadPID(6 * sizeof(float));
 	memcpy(&payloadPID[0], PIDparameters, 6 * sizeof(float));
 
@@ -96,8 +96,6 @@ void GameModel::onMessage(string topic, vector<char> payload)
 	if (!topic.compare("ball/motion/state")) // compare returns 0 if are equal
 	{
 		memcpy(ball, &payload[0], payload.size());
-
-
 
 		update();
 
@@ -356,6 +354,16 @@ void GameModel::setChipper(string robotID)
 void GameModel::shootToGoal(Players* player)
 {
 	setPoint_t placeInCourt = player->kickBallLogic(arcoOpposite, { ball[0], ball[2] });
+	// Vector3 playerPositionXYZ = player->getPosition();
+	// Vector2 playerCourtPosition = {playerPositionXYZ.x , playerPositionXYZ.z};
+	// float distance = sqrt(((playerCourtPosition.x - placeInCourt.coord.x)*
+	// 	(playerCourtPosition.x - placeInCourt.coord.x)) + 
+	// 	((playerCourtPosition.y - placeInCourt.coord.y)*
+	// 	(playerCourtPosition.y - placeInCourt.coord.y)));
+	// if(distance > 1)
+	// {
+	// 	placeInCourt = player->goToBall(playerCourtPosition, placeInCourt.coord, 0.3);
+	// }
 	setPoint_t kickValue = { 100, 100, 100 };
 
 	if ((placeInCourt.coord.x == kickValue.coord.x) &&
