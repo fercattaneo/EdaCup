@@ -36,12 +36,19 @@ public:
     Vector3 getSpeed();
     Vector3 getAngularSpeed();
     float getKickerCharge();
+    float getDribbler();
+    float getKicker();
+    float getChipper();
+    setPoint_t getRobotSetPoint();
 
     void setPosition(Vector3 newPos);
     void setRotation(Vector3 newRot);
     void setSpeed(Vector3 newSpeed);
     void setAngularSpeed(Vector3 newAngSpeed);
     void setPowerLevels(Vector3 powerValues);
+    void setDribbler(float volts);
+    void setKicker(float value);
+    void setChipper(float value);
 
 protected:
     Vector3 position;
@@ -49,6 +56,12 @@ protected:
     Vector3 speed;
     Vector3 angularSpeed;
     Vector3 powerLevel; // x for consume, y for battery level, z for kicker charge
+    float kicker;
+    float chipper;
+    float dribbler;
+    setPoint_t setpointInCourt;
+
+    void updateSetPoint();
 };
 
 #endif
