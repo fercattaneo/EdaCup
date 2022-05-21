@@ -1,10 +1,10 @@
 /*******************************************************************
-* @file Players.h
-* @date 20/05/2020
-* EDA - 22.08
-* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
-* @brief Header file of the players class module.
-*******************************************************************/
+ * @file Players.h
+ * @date 20/05/2020
+ * EDA - 22.08
+ * Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+ * @brief Header file of the players class module.
+ *******************************************************************/
 
 #ifndef PLAYERS_H
 #define PLAYERS_H
@@ -21,7 +21,7 @@
 using namespace std;
 
 // Rol of each player
-enum PLAYERS_POSITION       //for court rol identification
+enum PLAYERS_POSITION // for court rol identification
 {
     GOALIE,
     DEFENSE,

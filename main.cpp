@@ -1,11 +1,11 @@
 /*******************************************************************
-* @file main.cpp
-* @date 20/05/2020
-* EDA - 22.08
-* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
-* @brief Main file of the project. Initializes client,
-*       robots and game model.
-*******************************************************************/
+ * @file main.cpp
+ * @date 20/05/2020
+ * EDA - 22.08
+ * Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+ * @brief Main file of the project. Initializes client,
+ *       robots and game model.
+ *******************************************************************/
 
 #include "MQTTClient2.h"
 #include "Players.h"
@@ -16,9 +16,9 @@
 
 using namespace std;
 
-void subscribeRobotTopics(MQTTClient2& client, string team);
+void subscribeRobotTopics(MQTTClient2 &client, string team);
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/";
 
@@ -67,12 +67,12 @@ int main(int argc, char* argv[])
 }
 
 /**
-* @brief suscribes to mqtt messagges topics
-*
-* @param client: current client for suscription
-* @param team: string containig the actual team identification
-*/
-void subscribeRobotTopics(MQTTClient2& client, string team)
+ * @brief suscribes to mqtt messagges topics
+ *
+ * @param client: current client for suscription
+ * @param team: string containig the actual team identification
+ */
+void subscribeRobotTopics(MQTTClient2 &client, string team)
 {
 	string myTeam, oppositeTeam;
 	if (team == "1")

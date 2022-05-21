@@ -1,11 +1,11 @@
 /*******************************************************************
-* @file Robot.cpp
-* @date 20/05/2020
-* EDA - 22.08
-* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
-* @brief Source file of the Robot class module. Setters and getters
-* of robots ingame values.
-*******************************************************************/
+ * @file Robot.cpp
+ * @date 20/05/2020
+ * EDA - 22.08
+ * Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+ * @brief Source file of the Robot class module. Setters and getters
+ * of robots ingame values.
+ *******************************************************************/
 #include "Robot.h"
 
 /* SETTERS */

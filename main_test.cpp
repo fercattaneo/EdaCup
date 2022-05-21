@@ -3,9 +3,8 @@
 #include <string>
 #include <sstream>
 #include "data.h"
-#include "Robot.h"
-using namespace std;
 
+using namespace std;
 
 int fail()
 {
@@ -19,19 +18,18 @@ int pass()
     return 0;
 }
 
-
-int main (void) 
+int main(void)
 {
     cout << "                   __TESTING__" << endl;
 
-    //Test 1: Prueba del proporcional entre dos puntos
-    Vector2 originPos = {-1,1};
-    Vector2 finalPos = {1,-1};
+    // Test 1: Prueba del proporcional entre dos puntos
+    Vector2 originPos = {-1, 1};
+    Vector2 finalPos = {1, -1};
     cout << "TESTS FOR PROPORTIONAL POSITION FUNCTION:" << endl;
     cout << "Testing half position...";
     float proportion = 0.5f;
     Vector2 result4 = proportionalPosition(originPos, finalPos, proportion);
-    if (result4.x == 0 && result4.y == 0 )
+    if (result4.x == 0 && result4.y == 0)
     {
         pass();
     }
@@ -64,12 +62,12 @@ int main (void)
         fail();
     }
 
-    //Test 2: Prueba del calculo de la rotacion del jugador adecuada.
+    // Test 2: Prueba del calculo de la rotacion del jugador adecuada.
     cout << "Testing rotation...";
     Vector2 originPos3 = {1, -1};
     Vector2 finalPos3 = {-1, 1};
     float result7 = calculateRotation(originPos3, finalPos3);
-    if (result7 <= -225.0f && result7 >= -225.1f)//ESTO NO FUNCIONA NUNCA
+    if (result7 <= -225.0f && result7 >= -225.1f) // ESTO NO FUNCIONA NUNCA
     {
         pass();
     }
@@ -78,10 +76,10 @@ int main (void)
         fail();
     }
 
-    //Test 3: Prueba que verifica si una coordenada está cerca de otra,
+    // Test 3: Prueba que verifica si una coordenada está cerca de otra,
     cout << "Testing if 2 coordenates are close to each other ";
-    Vector2 originCoord = {1,1};
-    Vector2 destinationCoord = {1,0};
+    Vector2 originCoord = {1, 1};
+    Vector2 destinationCoord = {1, 0};
     float nearRange = 2;
     if (isCloseTo(originCoord, destinationCoord, nearRange))
     {
@@ -91,14 +89,14 @@ int main (void)
     {
         fail();
     }
-    
-    //Test 4: Prueba que verifica si el robot y la pelota están en sobre la misma linea. 
+
+    // Test 4: Prueba que verifica si el robot y la pelota están en sobre la misma linea.
     cout << "TESTS FOR SAME LINE FUNCTION:" << endl;
     cout << "Testing positive intermediate...";
-    Vector2 originPos4 = {8,4};
-    Vector2 finalPos4 = {0,0};
-    Vector2 mediumPos = {4,2};
-    if(sameLine (originPos4, finalPos4, mediumPos))
+    Vector2 originPos4 = {8, 4};
+    Vector2 finalPos4 = {0, 0};
+    Vector2 mediumPos = {4, 2};
+    if (sameLine(originPos4, finalPos4, mediumPos))
     {
         pass();
     }
@@ -109,7 +107,7 @@ int main (void)
 
     cout << "Testing negative intermediate...";
     Vector2 mediumPos3 = {-4, -2};
-    if(sameLine (originPos4, finalPos4, mediumPos3))
+    if (sameLine(originPos4, finalPos4, mediumPos3))
     {
         pass();
     }
@@ -117,8 +115,6 @@ int main (void)
     {
         fail();
     }
-    
 
     return 0;
 }
-    

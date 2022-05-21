@@ -1,11 +1,11 @@
 /*******************************************************************
-* @file data.cpp
-* @date 20/05/2020
-* EDA - 22.08
-* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
-* @brief Source file of the data module. Module prepared for 
-* multiple data types and usefull functions calculus.
-*******************************************************************/
+ * @file data.cpp
+ * @date 20/05/2020
+ * EDA - 22.08
+ * Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+ * @brief Source file of the data module. Module prepared for
+ * multiple data types and usefull functions calculus.
+ *******************************************************************/
 #include "data.h"
 
 using namespace std;
@@ -22,10 +22,10 @@ vector<char> getArrayFromSetPoint(setPoint_t setpoint)
 }
 
 /**
-* @brief gets a float from a char vector
-* @param vec: sequence of bytes
-* @return float
-*/
+ * @brief gets a float from a char vector
+ * @param vec: sequence of bytes
+ * @return float
+ */
 float getFloat(vector<char> vec)
 {
 	float value = 0.0;
@@ -39,9 +39,9 @@ float getFloat(vector<char> vec)
 
 /**
  * @brief Get the Data From Float object
- * 
- * @param data 
- * @return vector<char> 
+ *
+ * @param data
+ * @return vector<char>
  */
 vector<char> getDataFromFloat(float data)
 {
@@ -65,7 +65,7 @@ Vector2 proportionalPosition(Vector2 originPos, Vector2 finalPos, float proporti
 
 	destination.x = (finalPos.x - originPos.x) * proportion + originPos.x;
 	destination.y = (finalPos.y - originPos.y) * proportion + originPos.y;
-	
+
 	return destination;
 }
 
@@ -99,14 +99,13 @@ float calculateRotation(Vector2 originPos, Vector2 finalPos)
 	}
 
 	float angle = std::atan(deltaX / deltaZ);
-	if (deltaZ > 0 )
+	if (deltaZ > 0)
 	{
 		angle -= PI; // radians degrees
 	}
-	angle = angle * (180 / PI);	 // grados sexagecimal degrees
+	angle = angle * (180 / PI); // grados sexagecimal degrees
 
 	return angle;
-
 }
 
 /*
@@ -129,27 +128,27 @@ bool isCloseTo(Vector2 originCoord, Vector2 destinationCoord, float nearRange)
 		return false;
 }
 
-bool sameLine (Vector2 originPos, Vector2 finalPos, Vector2 mediumPos)
+bool sameLine(Vector2 originPos, Vector2 finalPos, Vector2 mediumPos)
 {
 	float deltaX = finalPos.x - originPos.x;
 	float deltaY = finalPos.y - originPos.y;
-	if(deltaX == 0) //linea vertical
+	if (deltaX == 0) // linea vertical
 	{
-		if((mediumPos.x - originPos.x) == 0) //pertenece a la linea
+		if ((mediumPos.x - originPos.x) == 0) // pertenece a la linea
 		{
 			return true;
 		}
 	}
-	float pendiente = deltaY/deltaX;
+	float pendiente = deltaY / deltaX;
 
 	float deltaX2 = mediumPos.x - originPos.x;
 	float deltaY2 = mediumPos.y - originPos.y;
-	if((deltaX2 == 0) && ((finalPos.x - mediumPos.x)<=0))
+	if ((deltaX2 == 0) && ((finalPos.x - mediumPos.x) <= 0))
 	{
 		return true;
 	}
-	float pendiente2 = deltaY2/deltaX2;
-	if((pendiente2 >= (pendiente - 0.05)) && (pendiente2 <= (pendiente + 0.05)))
+	float pendiente2 = deltaY2 / deltaX2;
+	if ((pendiente2 >= (pendiente - 0.05)) && (pendiente2 <= (pendiente + 0.05)))
 	{
 		return true;
 	}

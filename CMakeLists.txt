@@ -46,10 +46,6 @@ add_executable(main_test main_test.cpp data.cpp Robot.cpp)
 add_test(NAME test1 COMMAND main_test)
 
 # Packages for test
-find_package(raylib REQUIRED)
-find_package(mosquitto REQUIRED)
-find_package(OpenSSL REQUIRED)
-
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     target_include_directories(main_test PRIVATE ${RAYLIB_INCLUDE_DIRS} ${MOSQUITTO_INCLUDE_DIRS})
     target_link_libraries(main_test PRIVATE ${RAYLIB_LIBRARIES} ${MOSQUITTO_LIBRARIES} OpenSSL::SSL 

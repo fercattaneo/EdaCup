@@ -1,10 +1,10 @@
 /*******************************************************************
-* @file GameModel.h
-* @date 20/05/2020
-* EDA - 22.08
-* Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
-* @brief Header file of the GameModel class module.
-*******************************************************************/
+ * @file GameModel.h
+ * @date 20/05/2020
+ * EDA - 22.08
+ * Group 7: Cattaneo, Diaz Excoffon, Diaz Guzman, Michelotti, Wickham
+ * @brief Header file of the GameModel class module.
+ *******************************************************************/
 #ifndef _GAMEMODEL_H
 #define _GAMEMODEL_H
 
@@ -74,7 +74,7 @@ private:
     void assignMessagePayload(string topic, vector<char> &payload);
 
     void setSetpoint(setPoint_t setpoint, string robotID);
-    
+
     void shootToGoal(Players *player);
     void voltageKickerChipper(string robotID);
     void setDribbler(string robotID);
