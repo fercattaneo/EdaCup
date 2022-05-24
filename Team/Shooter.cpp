@@ -10,3 +10,13 @@ Shooter::~Shooter()
 {
 
 }
+
+void Shooter::updateAttack()
+{
+    ;
+}
+
+void Shooter::updateDefense(setPoint_t oppAttacker)
+{
+    ;
+}

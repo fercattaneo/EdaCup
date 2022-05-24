@@ -41,13 +41,13 @@ GameModel::GameModel(MQTTClient2& mqttClient, string myTeam)
 
 	Goalie player1(arcoTeam);
 	addPlayer(&player1);
-	Defense player2(arcoTeam);
+	Shooter player2(arcoTeam);
 	addPlayer(&player2);
-	Defense player3(arcoTeam);
+	Shooter player3(arcoTeam);
 	addPlayer(&player3);
-	Midfielder player4(arcoTeam);
+	Shooter player4(arcoTeam);
 	addPlayer(&player4);
-	Midfielder player5(arcoTeam);
+	Shooter player5(arcoTeam);
 	addPlayer(&player5);
 	Shooter player6(arcoTeam);
 	addPlayer(&player6);

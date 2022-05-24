@@ -84,3 +84,13 @@ void Players::dissablePlayer(void)
 {
 	enablePlayer = false;
 }
+
+void Players::updateAttack()
+{
+	;
+}
+
+void Players::updateDefense()
+{
+	;
+}

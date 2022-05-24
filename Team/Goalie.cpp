@@ -26,7 +26,10 @@ void Goalie::updateDefense(setPoint_t oppAttacker)
         setDribbler(1);
     }
 }
-
+void Goalie::updateAttack()
+{
+    ;
+}
 void Goalie::intercept(setPoint_t oppAttacker)
 {
     float deltaX = position.x - oppAttacker.coord.x;

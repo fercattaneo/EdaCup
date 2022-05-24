@@ -22,11 +22,9 @@ add_executable(main main.cpp
                     GameModel.cpp 
                     data.cpp 
                     Robot.cpp 
-                    Team/Players.cpp 
-                    Team/Goalie.cpp 
-                    Team/Defense.cpp
-                    Team/Midfielder.cpp 
-                    Team/Shooter.cpp) 
+                    ./Team/Players.cpp 
+                    ./Team/Goalie.cpp 
+                    ./Team/Shooter.cpp) 
 
 # Packages
 find_package(raylib REQUIRED)

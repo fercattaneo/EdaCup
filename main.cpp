@@ -20,7 +20,8 @@ void subscribeRobotTopics(MQTTClient2 &client, string team);
 
 int main(int argc, char *argv[])
 {
-	string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/";
+	string IMAGES_PATH = "C:/Users/santi/Source/Repos/fercattaneo/EdaCup/Resources/";
+	//string IMAGES_PATH = "C:/Users/catta/Documents/EDA/EdaCup/Resources/";
 
 	MQTTClient2 client;
 	if (!client.connect("controller", "localhost", 1883, "user", "vdivEMMN3SQWX2Ez"))

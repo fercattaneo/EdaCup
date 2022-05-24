@@ -17,8 +17,6 @@
 
 #include "Team/Players.h"
 #include "Team/Goalie.h"
-#include "Team/Defense.h"
-#include "Team/Midfielder.h"
 #include "Team/Shooter.h"
 
 using namespace std;
